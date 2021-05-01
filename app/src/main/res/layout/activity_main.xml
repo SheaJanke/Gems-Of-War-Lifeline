@@ -45,4 +45,13 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <GridView
+        android:layout_width="325dp"
+        android:layout_height="325dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/empty_board"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
