@@ -46,10 +46,12 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <GridView
+        android:id="@+id/board"
         android:layout_width="325dp"
         android:layout_height="325dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/empty_board"
+        android:numColumns="8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />

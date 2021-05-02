@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         imageView = findViewById(R.id.boardImage);
+        GridView gridView = (GridView) findViewById(R.id.board);
+        gridView.setAdapter(new ImageAdapter(this));
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
