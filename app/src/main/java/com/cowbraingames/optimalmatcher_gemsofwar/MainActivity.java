@@ -4,10 +4,13 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,8 +49,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(hasCameraPermissions()){
+                    CropImage.activity()
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .start(MainActivity.this);
+                    /*
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, USE_CAMERA);
+                    */
                 }
             }
         });
@@ -82,9 +90,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         switch (requestCode){
-            case USE_CAMERA:
-                Bitmap captureImage = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(captureImage);
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    Uri imageUri = result.getUri();
+                    try{
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                        imageView.setImageBitmap(bitmap);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                }
                 break;
             default:
                 break;
