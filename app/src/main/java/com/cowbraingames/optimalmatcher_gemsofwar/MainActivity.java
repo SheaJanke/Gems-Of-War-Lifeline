@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,6 +14,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 1;
     private static final int USE_CAMERA = 2;
     private ImageView imageView;
+    private GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         imageView = findViewById(R.id.boardImage);
-        GridView gridView = (GridView) findViewById(R.id.board);
-        gridView.setAdapter(new ImageAdapter(this));
+        gridView = (GridView) findViewById(R.id.board);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -52,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
                     CropImage.activity()
                             .setGuidelines(CropImageView.Guidelines.ON)
                             .start(MainActivity.this);
-                    /*
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, USE_CAMERA);
-                    */
                 }
             }
         });
@@ -87,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         switch (requestCode){
@@ -97,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                         Board board = new Board(bitmap);
+                        gridView.setAdapter(new ImageAdapter(this, board.getGrid()));
+                        gridView.invalidateViews();
+
                     }catch (Exception e){
                         e.printStackTrace();
                     }

@@ -9,12 +9,14 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    private int[][] grid;
     public Integer[] orbID = {
             R.drawable.super_skull,
             R.drawable.skull,
             R.drawable.fire,
             R.drawable.water,
             R.drawable.earth,
+            R.drawable.ground,
             R.drawable.light,
             R.drawable.dark
     };
@@ -25,12 +27,14 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.fire_h,
             R.drawable.water_h,
             R.drawable.earth_h,
+            R.drawable.ground_h,
             R.drawable.light_h,
             R.drawable.dark_h
     };
 
-    public ImageAdapter(Context c){
+    public ImageAdapter(Context c, int[][] grid){
         mContext = c;
+        this.grid = grid;
     }
 
     @Override
@@ -60,7 +64,7 @@ public class ImageAdapter extends BaseAdapter {
         }else{
             imageView = (ImageView) view;
         }
-        imageView.setImageResource(orbID[i%orbID.length]);
+        imageView.setImageResource(orbID[grid[i/8][i%8]]);
         return imageView;
     }
 
