@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     Uri imageUri = result.getUri();
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                        imageView.setImageBitmap(bitmap);
+                        Board board = new Board(bitmap);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
