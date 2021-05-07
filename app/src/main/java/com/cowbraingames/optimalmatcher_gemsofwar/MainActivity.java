@@ -1,6 +1,7 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 1;
     private static final int USE_CAMERA = 2;
+    private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
     private ImageView imageView;
     private GridView gridView;
 
@@ -46,6 +48,30 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         if(!hasCameraPermissions()){
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
         }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     Uri imageUri = result.getUri();
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                        Board board = new Board(bitmap);
+                        Board board = new Board(getApplicationContext(), bitmap);
+                        board.predictEachSquare();
                         gridView.setAdapter(new ImageAdapter(this, board.getGrid()));
                         gridView.invalidateViews();
 
