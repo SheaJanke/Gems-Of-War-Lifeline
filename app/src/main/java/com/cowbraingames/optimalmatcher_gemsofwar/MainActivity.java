@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                         Board board = new Board(getApplicationContext(), bitmap);
-                        board.predictEachSquare();
                         gridView.setAdapter(new ImageAdapter(this, board.getGrid()));
                         gridView.invalidateViews();
 

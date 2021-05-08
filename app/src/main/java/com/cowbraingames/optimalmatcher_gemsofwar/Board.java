@@ -9,8 +9,10 @@ import android.os.Environment;
 import androidx.annotation.RequiresApi;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.Model;
+import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;
 
 import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
@@ -50,7 +52,7 @@ public class Board {
         height = board.getHeight();
         System.out.println("width: " + width + " height: " + height);
         grid = new int[8][8];
-        fillGrid();
+        predictEachSquare2();
         printGrid();
     }
 
@@ -169,11 +171,54 @@ public class Board {
         }
     }
 
+    private void predictEachSquare2(){
+        try {
+            ModelUnquant model = ModelUnquant.newInstance(context);
+            ImageProcessor imageProcessor = new ImageProcessor.Builder()
+                    .add(new ResizeOp(224,224, ResizeOp.ResizeMethod.BILINEAR))
+                    .add(new NormalizeOp(127.5f, 127.5f))
+                    .build();
+            TensorImage tImage  = new TensorImage(DataType.FLOAT32);
+            for(int i = 0; i < 8; i++){
+                for(int j = 0; j < 8; j++){
+                    Bitmap img = Bitmap.createBitmap(board, i * width/8, j * height/8, width/8, height/8);
+                    tImage.load(img);
+                    tImage = imageProcessor.process(tImage);
+                    // Creates inputs for reference.
+                    TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+                    inputFeature0.loadBuffer(tImage.getBuffer());
+
+                    // Runs model inference and gets result.
+                    ModelUnquant.Outputs outputs = model.process(inputFeature0);
+                    TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+                    float[] results = outputFeature0.getFloatArray();
+                    int maxIndex = 0;
+                    float maxVal = 0;
+                    for(int k = 0; k < results.length; k++){
+                        System.out.print(results[k]);
+                        System.out.print(' ');
+                        if(results[k] > maxVal){
+                            maxIndex = k;
+                            maxVal = results[k];
+                        }
+                    }
+                    System.out.println();
+                    grid[j][i] = maxIndex;
+                }
+            }
+            // Releases model resources if no longer used.
+            model.close();
+        } catch (IOException e) {
+            // TODO Handle the exception
+        }
+    }
+
     public static void saveBitmap(String bitName,
                                   Bitmap mBitmap) {//  ww  w.j  a va 2s.c  o  m
 
+        Random r = new Random();
         File f = new File(Environment.getExternalStorageDirectory()
-                .toString() + "/" + bitName + ".png");
+                .toString() + "/" + bitName + String.valueOf(r.nextInt(10000))+ ".png");
         try {/* ww  w  .  j a va2 s . c  om*/
             f.createNewFile();
         } catch (IOException e1) {
