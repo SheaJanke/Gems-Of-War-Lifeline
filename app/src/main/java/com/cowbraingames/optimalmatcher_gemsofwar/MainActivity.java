@@ -28,12 +28,15 @@ import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 1;
     private static final int USE_CAMERA = 2;
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
-    private ImageView imageView;
     private GridView gridView;
 
     @Override
@@ -41,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        imageView = findViewById(R.id.boardImage);
         gridView = (GridView) findViewById(R.id.board);
         setSupportActionBar(toolbar);
 
@@ -90,45 +92,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         switch (requestCode){
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                CropImage.ActivityResult cropResult = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK) {
-                    Uri imageUri = result.getUri();
+                    Uri imageUri = cropResult.getUri();
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                         Board board = new Board(getApplicationContext(), bitmap);
-                        gridView.setAdapter(new ImageAdapter(this, board.getGrid()));
+                        int[][] grid = board.getGrid();
+                        gridView.setAdapter(new ImageAdapter(this, grid));
                         gridView.invalidateViews();
+                        ArrayList<Result> results = BoardUtils.getResults(grid);
+                        System.out.println("Size: " + results.size());
+                        Collections.sort(results, new Comparator<Result>() {
+                            @Override
+                            public int compare(Result result1, Result result2) {
+                                return result2.totalMatched() - result1.totalMatched();
+                            }
+                        });
+                        for(int i = 0; i < results.size(); i++){
+                            Result r = results.get(i);
+                            System.out.println("Result: " + r.r1 + r.c1 + r.r2 + r.c2 + " " + r.totalMatched() + r.getExtraTurn());
+                        }
 
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Exception error = result.getError();
+                    Exception error = cropResult.getError();
                 }
                 break;
             default:

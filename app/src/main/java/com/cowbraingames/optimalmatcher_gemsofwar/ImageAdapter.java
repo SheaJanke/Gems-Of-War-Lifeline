@@ -66,6 +66,9 @@ public class ImageAdapter extends BaseAdapter {
         }else{
             imageView = (ImageView) view;
         }
+        if(i == -1){
+            return imageView;
+        }
         imageView.setImageResource(orbID[grid[i/8][i%8]]);
         return imageView;
     }

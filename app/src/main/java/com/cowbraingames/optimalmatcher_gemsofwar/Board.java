@@ -74,14 +74,12 @@ public class Board {
                     int maxIndex = 0;
                     float maxVal = 0;
                     for(int k = 0; k < results.length; k++){
-                        System.out.print(results[k]);
-                        System.out.print(' ');
                         if(results[k] > maxVal){
                             maxIndex = k;
                             maxVal = results[k];
                         }
                     }
-                    System.out.println();
+                    grid[j][i] = maxIndex;
                     /*
                     ImageProcessor imageProcessor2 = new ImageProcessor.Builder()
                             .add(new ResizeOp(224,224, ResizeOp.ResizeMethod.BILINEAR))
@@ -91,7 +89,6 @@ public class Board {
                     tImage2 = imageProcessor2.process(tImage2);
                     saveBitmap(tImage2.getBitmap(), maxVal > 0.9 ? maxIndex: -1);
                      */
-                    grid[j][i] = maxIndex;
                 }
             }
             // Releases model resources if no longer used.
