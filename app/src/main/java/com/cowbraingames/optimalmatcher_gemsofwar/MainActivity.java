@@ -1,21 +1,17 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -24,24 +20,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements ResultsListAdapter.OnResultListener{
 
     private static final int REQUEST_CAMERA = 1;
     private static final int USE_CAMERA = 2;
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
     private GridView gridView;
-    private RecyclerView resultRow;
+    private ArrayList<Result> results;
+    private int[][] grid;
+    private RecyclerView resultsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         gridView = (GridView) findViewById(R.id.board);
-        resultRow = (RecyclerView) findViewById(R.id.result_row);
+        resultsList = (RecyclerView) findViewById(R.id.results_list);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -106,10 +102,11 @@ public class MainActivity extends AppCompatActivity {
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                         Board board = new Board(getApplicationContext(), bitmap);
-                        int[][] grid = board.getGrid();
-                        gridView.setAdapter(new ImageAdapter(this, grid));
+                        grid = board.getGrid();
+                        boolean[][] selected = new boolean[8][8];
+                        gridView.setAdapter(new ImageAdapter(this, grid, selected));
                         gridView.invalidateViews();
-                        ArrayList<Result> results = BoardUtils.getResults(grid);
+                        results = BoardUtils.getResults(grid);
                         System.out.println("Size: " + results.size());
                         Collections.sort(results, new Comparator<Result>() {
                             @Override
@@ -118,11 +115,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-                        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                        resultRow.setLayoutManager(linearLayoutManager);
-                        ResultAdapter resultAdapter = new ResultAdapter(this, results.get(0));
-                        resultRow.setAdapter(resultAdapter);
+                        resultsList.setLayoutManager(new LinearLayoutManager(this));
+                        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(this, results,  this);
+                        resultsList.setAdapter(resultsListAdapter);
 
                         for(int i = 0; i < results.size(); i++){
                             Result r = results.get(i);
@@ -139,5 +134,16 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onResultClick(int position) {
+        Log.d("click", "onResltClick");
+        boolean[][] selected = new boolean[8][8];
+        Result r = results.get(position);
+        selected[r.r1][r.c1] = true;
+        selected[r.r2][r.c2] = true;
+        gridView.setAdapter(new ImageAdapter(this, grid, selected));
+        gridView.invalidateViews();
     }
 }

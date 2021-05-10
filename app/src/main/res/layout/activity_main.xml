@@ -7,13 +7,24 @@
     android:visibility="visible"
     tools:context=".MainActivity">
 
-    <include
-        layout="@layout/result_row"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="325dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/board" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/board">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/results_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -45,7 +56,7 @@
         android:id="@+id/board"
         android:layout_width="325dp"
         android:layout_height="325dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/empty_board"
         android:numColumns="8"
         android:visibility="visible"

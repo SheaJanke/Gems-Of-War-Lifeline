@@ -10,6 +10,7 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private int[][] grid;
+    private boolean[][] selcted;
     public static Integer[] orbID = {
             R.drawable.skull,
             R.drawable.super_skull,
@@ -34,9 +35,10 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.block_h
     };
 
-    public ImageAdapter(Context c, int[][] grid){
+    public ImageAdapter(Context c, int[][] grid, boolean[][] selected){
         mContext = c;
         this.grid = grid;
+        this.selcted = selected;
     }
 
     @Override
@@ -69,7 +71,11 @@ public class ImageAdapter extends BaseAdapter {
         if(i == -1){
             return imageView;
         }
-        imageView.setImageResource(orbID[grid[i/8][i%8]]);
+        if(selcted[i/8][i%8]){
+            imageView.setImageResource(highlightedOrbID[grid[i/8][i%8]]);
+        }else{
+            imageView.setImageResource(orbID[grid[i/8][i%8]]);
+        }
         return imageView;
     }
 
