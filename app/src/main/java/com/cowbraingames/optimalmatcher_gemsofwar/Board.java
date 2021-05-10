@@ -29,16 +29,6 @@ public class Board {
     private Context context;
     private int width;
     private int height;
-    private Color[] colors = {
-            Color.valueOf(0.87f,0.72f,0.68f), // super skull
-            Color.valueOf(0.65f,0.65f,0.65f), // skull
-            Color.valueOf(0.78f,0.33f,0.30f), // fire
-            Color.valueOf(0.03f,0.50f,0.80f), // water
-            Color.valueOf(0.2f,0.85f,0.18f), // earth
-            Color.valueOf(0.55f,0.35f,0.35f), // ground
-            Color.valueOf(0.87f,0.85f,0.3f),  // light
-            Color.valueOf(0.5f,0.15f,0.75f)  // dark
-    };
     private int[][] grid;
 
     public Board(Context context, Bitmap board){

@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.view.View;
@@ -27,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int USE_CAMERA = 2;
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
     private GridView gridView;
+    private RecyclerView resultRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         gridView = (GridView) findViewById(R.id.board);
+        resultRow = (RecyclerView) findViewById(R.id.result_row);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -112,6 +117,13 @@ public class MainActivity extends AppCompatActivity {
                                 return result2.totalMatched() - result1.totalMatched();
                             }
                         });
+
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                        resultRow.setLayoutManager(linearLayoutManager);
+                        ResultAdapter resultAdapter = new ResultAdapter(this, results.get(0));
+                        resultRow.setAdapter(resultAdapter);
+
                         for(int i = 0; i < results.size(); i++){
                             Result r = results.get(i);
                             System.out.println("Result: " + r.r1 + r.c1 + r.r2 + r.c2 + " " + r.totalMatched() + r.getExtraTurn());

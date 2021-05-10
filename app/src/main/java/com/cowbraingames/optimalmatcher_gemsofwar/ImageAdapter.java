@@ -10,7 +10,7 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private int[][] grid;
-    public Integer[] orbID = {
+    public static Integer[] orbID = {
             R.drawable.skull,
             R.drawable.super_skull,
             R.drawable.fire,
@@ -22,7 +22,7 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.block
     };
 
-    public Integer[] highlightedOrbID = {
+    public static Integer[] highlightedOrbID = {
             R.drawable.skull_h,
             R.drawable.super_skull_h,
             R.drawable.fire_h,

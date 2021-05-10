@@ -1,5 +1,9 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class Result {
     static final int ORB_TYPES = 9;
     private final int[] matched;
@@ -39,4 +43,25 @@ public class Result {
     public int[] getMatched(){
         return matched;
     }
+
+    public ArrayList<ResultPair> getDisplayResults(){
+        ArrayList<ResultPair> displayResults = new ArrayList<>();
+        for(int i = 0; i < ORB_TYPES; i++){
+            if(matched[i] > 0){
+                displayResults.add(new ResultPair(matched[i], i));
+            }
+        }
+        Collections.sort(displayResults, new Comparator<ResultPair>() {
+            @Override
+            public int compare(ResultPair r1, ResultPair r2) {
+                if(r1.numOrbs != r2.numOrbs){
+                    return r2.numOrbs - r1.numOrbs;
+                }else{
+                    return r1.orbType - r2.orbType;
+                }
+            }
+        });
+        return displayResults;
+    }
+
 }
