@@ -111,7 +111,10 @@ public class MainActivity extends AppCompatActivity {
                         Collections.sort(results, new Comparator<Result>() {
                             @Override
                             public int compare(Result result1, Result result2) {
-                                return result2.totalMatched() - result1.totalMatched();
+                                if(result1.totalMatched() != result2.totalMatched()){
+                                    return result2.totalMatched() - result1.totalMatched();
+                                }
+                                return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
                             }
                         });
 

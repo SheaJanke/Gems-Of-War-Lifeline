@@ -1,6 +1,8 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +24,10 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
     private final ArrayList<Result> results;
     private final Board board;
     private final GridView gridView;
+    private final Color[] colors = {
+            Color.valueOf(105,105,105,255),
+            Color.valueOf(64,64,64,255)
+    };
 
     public ResultsListAdapter(Context ct, ArrayList<Result> results, Board board, GridView gridView){
         this.ct = ct;
@@ -46,10 +52,16 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         gridView.setAdapter(new ImageAdapter(ct, board.getGrid(), selected));
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ResultListViewHolder holder, final int position) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ct);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        if(position%2 == 0){
+            holder.resultRow.setBackgroundColor(0xFF404040);
+        }else{
+            holder.resultRow.setBackgroundColor(0xFF696969);
+        }
         holder.resultRow.setLayoutManager(linearLayoutManager);
         ResultAdapter resultAdapter = new ResultAdapter(ct, results.get(position));
         holder.resultRow.setAdapter(resultAdapter);
