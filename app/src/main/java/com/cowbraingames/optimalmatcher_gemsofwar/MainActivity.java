@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
-public class MainActivity extends AppCompatActivity implements ResultsListAdapter.OnResultListener{
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 1;
     private static final int USE_CAMERA = 2;
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ResultsListAdapte
                         });
 
                         resultsList.setLayoutManager(new LinearLayoutManager(this));
-                        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(this, results,  this);
+                        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(this, results, board, gridView);
                         resultsList.setAdapter(resultsListAdapter);
 
                         for(int i = 0; i < results.size(); i++){
@@ -136,14 +136,4 @@ public class MainActivity extends AppCompatActivity implements ResultsListAdapte
         }
     }
 
-    @Override
-    public void onResultClick(int position) {
-        Log.d("click", "onResltClick");
-        boolean[][] selected = new boolean[8][8];
-        Result r = results.get(position);
-        selected[r.r1][r.c1] = true;
-        selected[r.r2][r.c2] = true;
-        gridView.setAdapter(new ImageAdapter(this, grid, selected));
-        gridView.invalidateViews();
-    }
 }

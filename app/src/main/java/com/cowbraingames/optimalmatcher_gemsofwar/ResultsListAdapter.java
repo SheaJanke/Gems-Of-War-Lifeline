@@ -2,11 +2,14 @@ package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,12 +20,14 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
 
     private final Context ct;
     private final ArrayList<Result> results;
-    private OnResultListener onResultListener;
+    private final Board board;
+    private final GridView gridView;
 
-    public ResultsListAdapter(Context ct, ArrayList<Result> results, OnResultListener onResultListener){
+    public ResultsListAdapter(Context ct, ArrayList<Result> results, Board board, GridView gridView){
         this.ct = ct;
         this.results = results;
-        this.onResultListener = onResultListener;
+        this.board = board;
+        this.gridView = gridView;
     }
 
     @NonNull
@@ -30,24 +35,39 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
     public ResultListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(ct);
         View view = inflater.inflate(R.layout.result_row, parent, false);
-        return new ResultListViewHolder(view, onResultListener);
+        return new ResultListViewHolder(view);
+    }
+
+    private void updateHighlighted(int position){
+        boolean[][] selected = new boolean[8][8];
+        Result result = results.get(position);
+        selected[result.r1][result.c1] = true;
+        selected[result.r2][result.c2] = true;
+        gridView.setAdapter(new ImageAdapter(ct, board.getGrid(), selected));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ResultListViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ResultListViewHolder holder, final int position) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ct);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         holder.resultRow.setLayoutManager(linearLayoutManager);
         ResultAdapter resultAdapter = new ResultAdapter(ct, results.get(position));
         holder.resultRow.setAdapter(resultAdapter);
-        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
+        holder.resultRow.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
-            public void onClick(View view) {
-                System.out.println("clicked");
-                onResultListener.onResultClick(position);
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                if(e.getAction() == MotionEvent.ACTION_DOWN){
+                    updateHighlighted(position);
+                }
+                return false;
             }
-        });
 
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+        });
     }
 
     @Override
@@ -57,19 +77,10 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
 
     public class ResultListViewHolder extends RecyclerView.ViewHolder{
         RecyclerView resultRow;
-        ConstraintLayout rowLayout;
-        OnResultListener onResultListener;
 
-        public ResultListViewHolder(@NonNull View itemView, OnResultListener onResultListener) {
+        public ResultListViewHolder(@NonNull View itemView) {
             super(itemView);
             resultRow = itemView.findViewById(R.id.result_row);
-            rowLayout = itemView.findViewById(R.id.row_layout);
-
-            this.onResultListener = onResultListener;
         }
-    }
-
-    public interface OnResultListener{
-        void onResultClick(int position);
     }
 }

@@ -28,6 +28,12 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
     public ResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(ct);
         View view = inflater.inflate(R.layout.result_item, parent, false);
+        parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Clicked3");
+            }
+        });
         return new ResultViewHolder(view);
     }
 
