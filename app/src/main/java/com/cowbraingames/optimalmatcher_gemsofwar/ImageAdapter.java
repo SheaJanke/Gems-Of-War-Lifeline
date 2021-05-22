@@ -72,10 +72,9 @@ public class ImageAdapter extends BaseAdapter {
             return imageView;
         }
         if(selcted[i/8][i%8]){
-            imageView.setImageResource(highlightedOrbID[grid[i/8][i%8]]);
-        }else{
-            imageView.setImageResource(orbID[grid[i/8][i%8]]);
+            imageView.setBackgroundResource(R.color.colorAccent);
         }
+        imageView.setImageResource(orbID[grid[i/8][i%8]]);
         return imageView;
     }
 
