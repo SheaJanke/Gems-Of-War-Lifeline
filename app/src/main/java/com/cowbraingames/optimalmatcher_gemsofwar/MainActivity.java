@@ -23,6 +23,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Result> results;
     private int[][] grid;
     private RecyclerView resultsList;
+    private ImageView testImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         gridView = (GridView) findViewById(R.id.board);
         resultsList = (RecyclerView) findViewById(R.id.results_list);
+        testImg = findViewById(R.id.testImg);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     try{
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                         Board board = new Board(getApplicationContext(), bitmap);
+                        BoardDetection boardDetection = new BoardDetection(bitmap, testImg);
                         grid = board.getGrid();
                         boolean[][] selected = new boolean[8][8];
                         gridView.setAdapter(new ImageAdapter(this, grid, selected));
