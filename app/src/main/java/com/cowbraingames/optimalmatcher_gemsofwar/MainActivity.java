@@ -1,6 +1,8 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -40,10 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private int[][] grid;
     private RecyclerView resultsList;
     private ImageView testImg;
+    private Context context;
+    private Activity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
+        mainActivity = this;
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         gridView = (GridView) findViewById(R.id.board);
@@ -99,44 +105,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         switch (requestCode){
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                CropImage.ActivityResult cropResult = CropImage.getActivityResult(data);
-                if (resultCode == RESULT_OK) {
-                    Uri imageUri = cropResult.getUri();
-                    try{
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                        Board board = new Board(getApplicationContext(), bitmap);
-                        BoardDetection boardDetection = new BoardDetection(bitmap, testImg);
-                        grid = board.getGrid();
-                        boolean[][] selected = new boolean[8][8];
-                        gridView.setAdapter(new ImageAdapter(this, grid, selected));
-                        gridView.invalidateViews();
-                        results = BoardUtils.getResults(grid);
-                        System.out.println("Size: " + results.size());
-                        Collections.sort(results, new Comparator<Result>() {
-                            @Override
-                            public int compare(Result result1, Result result2) {
-                                if(result1.totalMatched() != result2.totalMatched()){
-                                    return result2.totalMatched() - result1.totalMatched();
+                new Thread(() -> {
+                    CropImage.ActivityResult cropResult = CropImage.getActivityResult(data);
+                    if (resultCode == RESULT_OK) {
+                        Uri imageUri = cropResult.getUri();
+                        try{
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
+                            Board board = new Board(getApplicationContext(), bitmap);
+                            BoardDetection boardDetection = new BoardDetection(bitmap, testImg, mainActivity);
+                            runOnUiThread(() -> {
+                                grid = board.getGrid();
+                                boolean[][] selected = new boolean[8][8];
+                                gridView.setAdapter(new ImageAdapter(context, grid, selected));
+                                gridView.invalidateViews();
+                                results = BoardUtils.getResults(grid);
+                                System.out.println("Size: " + results.size());
+                                Collections.sort(results, (result1, result2) -> {
+                                    if(result1.totalMatched() != result2.totalMatched()){
+                                        return result2.totalMatched() - result1.totalMatched();
+                                    }
+                                    return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
+                                });
+                                resultsList.setLayoutManager(new LinearLayoutManager(context));
+                                ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, board, gridView);
+                                resultsList.setAdapter(resultsListAdapter);
+
+                                for(int i = 0; i < results.size(); i++){
+                                    Result r = results.get(i);
+                                    System.out.println("Result: " + r.r1 + r.c1 + r.r2 + r.c2 + " " + r.totalMatched() + r.getExtraTurn());
                                 }
-                                return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
-                            }
-                        });
+                            });
 
-                        resultsList.setLayoutManager(new LinearLayoutManager(this));
-                        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(this, results, board, gridView);
-                        resultsList.setAdapter(resultsListAdapter);
 
-                        for(int i = 0; i < results.size(); i++){
-                            Result r = results.get(i);
-                            System.out.println("Result: " + r.r1 + r.c1 + r.r2 + r.c2 + " " + r.totalMatched() + r.getExtraTurn());
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
-
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        Exception error = cropResult.getError();
                     }
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Exception error = cropResult.getError();
-                }
+                }).start();
                 break;
             default:
                 break;
