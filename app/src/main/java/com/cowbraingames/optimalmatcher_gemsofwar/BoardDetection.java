@@ -20,6 +20,8 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoardDetection {
     static{ System.loadLibrary("opencv_java4"); }
@@ -88,6 +90,121 @@ public class BoardDetection {
         coords.sort((p1, p2) -> p1.first - p2.first);
         int medianRadius = coords.get(coords.size()/3).first;
         coords.removeIf(pt -> pt.first/(double)medianRadius < 0.85 || pt.first/(double)medianRadius > 1.15);
+        coords.sort((p1, p2) -> (int) (p1.second.x - p2.second.x));
+        double medianX = coords.get(coords.size()/2).second.x;
+        coords.sort((p1, p2) -> (int) (p1.second.y - p2.second.y));
+        double medianY = coords.get(coords.size()/2).second.y;
+        coords.sort((p1, p2) -> (int) (distance(p1.second, medianX, medianY) - distance(p2.second, medianX, medianY)));
+        boolean[] visited = new boolean[coords.size()];
+        Map<Integer, Pair<Integer,Integer>> pos = new HashMap<>();
+        pos.put(0, Pair.create(0, 0));
+        dfs(coords, pos, visited,0, medianRadius);
+        System.out.println("Coords.size: " + coords.size());
+        for(int i = 0; i < coords.size(); i++){
+            Imgproc.circle(edges, coords.get(i).second, coords.get(i).first, new Scalar(255,255,255), visited[i] ? 5 : 2);
+        }
+    }
+
+    void dfs(ArrayList<Pair<Integer, Point>> coords, Map<Integer, Pair<Integer,Integer>> pos, boolean[] visited, int cur, int medianRadius){
+        if(visited[cur]){
+            return;
+        }
+        Point p = coords.get(cur).second;
+        for(int i = 0; i < coords.size(); i++){
+            if(i != cur && !visited[i]){
+                visited[cur] = true;
+                Point p2 = coords.get(i).second;
+                double threshold = Math.pow(medianRadius, 2)/4;
+                boolean works = false;
+                Pair<Integer, Integer> curPos = pos.get(cur);
+                for(int j = 1; j <= 3; j++){
+                    if(distance(p2, p.x - j*2*medianRadius, p.y) < threshold){
+                        pos.put(i, Pair.create(curPos.first - j, curPos.second));
+                        works = true;
+                    }
+                    if(distance(p2, p.x + j*2*medianRadius, p.y) < threshold){
+                        pos.put(i, Pair.create(curPos.first + j, curPos.second));
+                        works = true;
+                    }
+                    if(distance(p2, p.x, p.y-j*2*medianRadius) < threshold){
+                        pos.put(i, Pair.create(curPos.first, curPos.second - j));
+                        works = true;
+                    }
+                    if(distance(p2, p.x, p.y+j*2*medianRadius) < threshold){
+                        pos.put(i, Pair.create(curPos.first, curPos.second + j));
+                        works = true;
+                    }
+                }
+                if(works){
+                    dfs(coords, pos, visited, i, medianRadius);
+                }
+            }
+        }
+    }
+
+    private int[][] hasBoard(Map<Integer, Pair<Integer,Integer>> pos){
+        int minX = 100, maxX = -100, minY = 100, maxY = -100;
+        for(Pair<Integer, Integer> val: pos.values()){
+            minX = Math.min(minX, val.first);
+            maxX = Math.max(maxX, val.first);
+            minY = Math.min(minY, val.second);
+            maxY = Math.max(maxY, val.second);
+        }
+        int[] x = new int[maxX-minX+1];
+        int[] y = new int[maxY-minY+1];
+        for(Pair<Integer, Integer> val: pos.values()){
+            x[val.first-minX]++;
+            y[val.second-minY]++;
+        }
+        int l = 0, r = x.length-1;
+        while(r-l+1 > 8){
+            if(x[l] > x[r]){
+                r--;
+            }else{
+                l++;
+            }
+        }
+        if(r-l+1 < 8){
+            return new int[0][0];
+        }
+        for(int i = l; i <= r; i++){
+            if(x[i] < 2){
+                return new int[0][0];
+            }
+        }
+        int xCorrection = l;
+        l = 0;
+        r = y.length-1;
+        while(r-l+1 > 8){
+            if(y[l] > y[r]){
+                r--;
+            }else{
+                l++;
+            }
+        }
+        if(r-l+1 < 8){
+            return new int[0][0];
+        }
+        for(int i = l; i <= r; i++){
+            if(y[i] < 2){
+                return new int[0][0];
+            }
+        }
+        int yCorrection = l;
+        int[][] answer = new int[8][8];
+        for(int key: pos.keySet()){
+            Pair<Integer, Integer> val = pos.get(key);
+            if(0 <= val.first - xCorrection  && val.first - xCorrection < 8){
+                if(0 <= val.second - yCorrection  && val.second - yCorrection < 8){
+                    answer[val.first - xCorrection][val.second - yCorrection] = key;
+                }
+            }
+        }
+        return answer;
+    }
+
+    private double distance(Point p, double targetX, double targetY){
+        return Math.pow(p.x - targetX, 2) + Math.pow(p.y - targetY, 2);
     }
 
 
