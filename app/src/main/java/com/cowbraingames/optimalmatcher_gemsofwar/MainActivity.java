@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                                 gridView.setAdapter(new ImageAdapter(context, grid, selected));
                                 gridView.invalidateViews();
                                 results = BoardUtils.getResults(grid);
-                                System.out.println("Size: " + results.size());
                                 Collections.sort(results, (result1, result2) -> {
                                     if(result1.totalMatched() != result2.totalMatched()){
                                         return result2.totalMatched() - result1.totalMatched();
@@ -129,11 +128,6 @@ public class MainActivity extends AppCompatActivity {
                                 resultsList.setLayoutManager(new LinearLayoutManager(context));
                                 ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, board, gridView);
                                 resultsList.setAdapter(resultsListAdapter);
-
-                                for(int i = 0; i < results.size(); i++){
-                                    Result r = results.get(i);
-                                    System.out.println("Result: " + r.r1 + r.c1 + r.r2 + r.c2 + " " + r.totalMatched() + r.getExtraTurn());
-                                }
                             });
 
 

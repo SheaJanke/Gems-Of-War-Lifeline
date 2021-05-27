@@ -48,10 +48,10 @@ public class BoardDetection {
         double totalPixels = board.rows() * board.cols();
         double curWhite = 0;
         int threshold1 = 500;
-        while(curWhite/totalPixels < 0.08){
+        while(curWhite/totalPixels < 0.12){
             Imgproc.Canny(board, edges, threshold1, 2.5*threshold1);
             curWhite = Core.countNonZero(edges);
-            System.out.println("Threshold: " + threshold1 + " ratio: " + curWhite/totalPixels);
+            //System.out.println("Threshold: " + threshold1 + " ratio: " + curWhite/totalPixels);
             threshold1*= 0.95;
         }
         System.out.println("Finished Edge Detection");
@@ -64,16 +64,17 @@ public class BoardDetection {
         System.out.println("Starting HoughCircles");
         int minDimension = Math.min(edges.rows(), edges.cols());
         int maxRadius = minDimension/16;
-        int minRadius = maxRadius/2;
+        int minRadius = maxRadius/3;
         int curThreshold = 200;
-        while(circles.cols() < 65){
+        boolean foundBoard = false;
+        while(!foundBoard){
             Imgproc.HoughCircles(edges, circles, Imgproc.CV_HOUGH_GRADIENT, 1.5, 2*minRadius, 10, curThreshold, minRadius,  maxRadius);
-            System.out.println("curThreshold: " + curThreshold + " Circles found: " + circles.cols());
+            foundBoard = drawCircles();
             curThreshold *= 0.95;
         }
     }
 
-    private void drawCircles(){
+    private boolean drawCircles(){
         ArrayList<Pair<Integer, Point>> coords = new ArrayList<>();
         for (int x = 0; x < circles.cols(); x++)
         {
@@ -87,6 +88,9 @@ public class BoardDetection {
             coords.add(Pair.create(radius, pt));
 
         }
+        if(coords.isEmpty()){
+            return false;
+        }
         coords.sort((p1, p2) -> p1.first - p2.first);
         int medianRadius = coords.get(coords.size()/3).first;
         coords.removeIf(pt -> pt.first/(double)medianRadius < 0.85 || pt.first/(double)medianRadius > 1.15);
@@ -99,10 +103,28 @@ public class BoardDetection {
         Map<Integer, Pair<Integer,Integer>> pos = new HashMap<>();
         pos.put(0, Pair.create(0, 0));
         dfs(coords, pos, visited,0, medianRadius);
-        System.out.println("Coords.size: " + coords.size());
-        for(int i = 0; i < coords.size(); i++){
-            Imgproc.circle(edges, coords.get(i).second, coords.get(i).first, new Scalar(255,255,255), visited[i] ? 5 : 2);
+        int[][] boardPos = getBoardPos(pos);
+        if(boardPos.length < 8){
+            return false;
         }
+        for(int i = 0; i < 8; i++){
+            int lowestIndex = 7, highestIndex = 0;
+            for(int j = 0; j < 8; j++){
+                if(boardPos[i][j] != -1){
+                    lowestIndex = Math.min(j, lowestIndex);
+                    highestIndex = Math.max(j, highestIndex);
+                }
+            }
+            Point l = coords.get(boardPos[i][lowestIndex]).second;
+            Point r = coords.get(boardPos[i][highestIndex]).second;
+            double dx = (r.x - l.x)/(highestIndex-lowestIndex);
+            double dy = (r.y - l.y)/(highestIndex-lowestIndex);
+            for(int j = 0; j < 8; j++){
+                Point center = new Point(l.x + dx*(j-lowestIndex), l.y + dy*(j-lowestIndex));
+                Imgproc.circle(edges, center, medianRadius, new Scalar(255,255,255), 3);
+            }
+        }
+        return true;
     }
 
     void dfs(ArrayList<Pair<Integer, Point>> coords, Map<Integer, Pair<Integer,Integer>> pos, boolean[] visited, int cur, int medianRadius){
@@ -114,7 +136,7 @@ public class BoardDetection {
             if(i != cur && !visited[i]){
                 visited[cur] = true;
                 Point p2 = coords.get(i).second;
-                double threshold = Math.pow(medianRadius, 2)/4;
+                double threshold = Math.pow(medianRadius, 2)/6;
                 boolean works = false;
                 Pair<Integer, Integer> curPos = pos.get(cur);
                 for(int j = 1; j <= 3; j++){
@@ -142,7 +164,7 @@ public class BoardDetection {
         }
     }
 
-    private int[][] hasBoard(Map<Integer, Pair<Integer,Integer>> pos){
+    private int[][] getBoardPos(Map<Integer, Pair<Integer,Integer>> pos){
         int minX = 100, maxX = -100, minY = 100, maxY = -100;
         for(Pair<Integer, Integer> val: pos.values()){
             minX = Math.min(minX, val.first);
@@ -150,6 +172,7 @@ public class BoardDetection {
             minY = Math.min(minY, val.second);
             maxY = Math.max(maxY, val.second);
         }
+        System.out.println("Dims: " + minX + " " + maxX + " " + minY + " " + maxY);
         int[] x = new int[maxX-minX+1];
         int[] y = new int[maxY-minY+1];
         for(Pair<Integer, Integer> val: pos.values()){
@@ -172,7 +195,7 @@ public class BoardDetection {
                 return new int[0][0];
             }
         }
-        int xCorrection = l;
+        int xCorrection = minX + l;
         l = 0;
         r = y.length-1;
         while(r-l+1 > 8){
@@ -190,8 +213,13 @@ public class BoardDetection {
                 return new int[0][0];
             }
         }
-        int yCorrection = l;
+        int yCorrection = minY + l;
         int[][] answer = new int[8][8];
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                answer[i][j] = -1;
+            }
+        }
         for(int key: pos.keySet()){
             Pair<Integer, Integer> val = pos.get(key);
             if(0 <= val.first - xCorrection  && val.first - xCorrection < 8){
