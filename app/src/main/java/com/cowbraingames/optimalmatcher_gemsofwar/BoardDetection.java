@@ -64,7 +64,7 @@ public class BoardDetection {
         System.out.println("Starting HoughCircles");
         int minDimension = Math.min(edges.rows(), edges.cols());
         int maxRadius = minDimension/16;
-        int minRadius = maxRadius/3;
+        int minRadius = (int)(maxRadius/2.25);
         int curThreshold = 200;
         boolean foundBoard = false;
         while(!foundBoard){
@@ -72,6 +72,7 @@ public class BoardDetection {
             foundBoard = drawCircles();
             curThreshold *= 0.95;
         }
+
     }
 
     private boolean drawCircles(){
@@ -107,6 +108,7 @@ public class BoardDetection {
         if(boardPos.length < 8){
             return false;
         }
+        Point[][] circleCenters = new Point[8][8];
         for(int i = 0; i < 8; i++){
             int lowestIndex = 7, highestIndex = 0;
             for(int j = 0; j < 8; j++){
@@ -120,11 +122,31 @@ public class BoardDetection {
             double dx = (r.x - l.x)/(highestIndex-lowestIndex);
             double dy = (r.y - l.y)/(highestIndex-lowestIndex);
             for(int j = 0; j < 8; j++){
-                Point center = new Point(l.x + dx*(j-lowestIndex), l.y + dy*(j-lowestIndex));
-                Imgproc.circle(edges, center, medianRadius, new Scalar(255,255,255), 3);
+                circleCenters[i][j] = new Point(l.x + dx*(j-lowestIndex), l.y + dy*(j-lowestIndex));
+            }
+        }
+        for(int j = 0; j < 8; j++){
+            int lowestIndex = 7, highestIndex = 0;
+            for(int i = 0; i < 8; i++){
+                if(boardPos[i][j] != -1){
+                    lowestIndex = Math.min(i, lowestIndex);
+                    highestIndex = Math.max(i, highestIndex);
+                }
+            }
+            Point top = coords.get(boardPos[lowestIndex][j]).second;
+            Point bottom = coords.get(boardPos[highestIndex][j]).second;
+            double dx = (bottom.x - top.x)/(highestIndex-lowestIndex);
+            double dy = (bottom.y - top.y)/(highestIndex-lowestIndex);
+            for(int i = 0; i < 8; i++){
+                Point center = new Point(top.x + dx*(i-lowestIndex), top.y + dy*(i-lowestIndex));
+                Imgproc.circle(edges, averagePoint(center, circleCenters[i][j]), medianRadius, new Scalar(255,255,255), 3);
             }
         }
         return true;
+    }
+
+    private Point averagePoint(Point p1, Point p2){
+        return new Point((p1.x + p2.x)/2, (p1.y + p2.y)/2);
     }
 
     void dfs(ArrayList<Pair<Integer, Point>> coords, Map<Integer, Pair<Integer,Integer>> pos, boolean[] visited, int cur, int medianRadius){
