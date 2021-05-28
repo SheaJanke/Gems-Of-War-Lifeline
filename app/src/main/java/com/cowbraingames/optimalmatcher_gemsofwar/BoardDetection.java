@@ -14,6 +14,7 @@ import org.opencv.core.CvException;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -26,12 +27,17 @@ import java.util.Map;
 public class BoardDetection {
     static{ System.loadLibrary("opencv_java4"); }
     private final Mat board, edges, circles;
+    private Mat cropped;
+    private Bitmap fullBoard;
     private Bitmap compressedBoard;
+    private Bitmap testCrop;
 
     public BoardDetection(Bitmap boardBitmap, ImageView testImg, Activity mainActivity){
         board = new Mat();
         edges = new Mat();
         circles = new Mat();
+        cropped = new Mat();
+        fullBoard = boardBitmap;
         Bitmap bmp32 = boardBitmap.copy(Bitmap.Config.ARGB_8888, true);
         compressedBoard = Bitmap.createScaledBitmap(bmp32, bmp32.getWidth()/6, bmp32.getHeight()/6, true);
         Utils.bitmapToMat(compressedBoard, board);
@@ -39,7 +45,8 @@ public class BoardDetection {
         detectCircles();
         drawCircles();
         Bitmap img = matToBitmap(edges);
-        mainActivity.runOnUiThread(() -> testImg.setImageBitmap(img));
+        Bitmap test = Bitmap.createBitmap(compressedBoard, 50, 50, 50, 50);
+        mainActivity.runOnUiThread(() -> testImg.setImageBitmap(testCrop));
 
     }
 
@@ -139,9 +146,15 @@ public class BoardDetection {
             double dy = (bottom.y - top.y)/(highestIndex-lowestIndex);
             for(int i = 0; i < 8; i++){
                 Point center = new Point(top.x + dx*(i-lowestIndex), top.y + dy*(i-lowestIndex));
-                Imgproc.circle(edges, averagePoint(center, circleCenters[i][j]), medianRadius, new Scalar(255,255,255), 3);
+                Point averageCenter = averagePoint(center, circleCenters[i][j]);
+                int squareDim = (int)(2.2*medianRadius);
+                Rect rectCrop = new Rect((int)averageCenter.x - squareDim/2, (int)averageCenter.y - squareDim/2, squareDim, squareDim);
+                Imgproc.rectangle(edges, rectCrop, new Scalar(255,255,255), 3);
+                testCrop = Bitmap.createBitmap(fullBoard, rectCrop.x * 6, rectCrop.y*6, rectCrop.width*6, rectCrop.height*6);
+                System.out.println(averageCenter.x + " " + averageCenter.y);
             }
         }
+        System.out.println(edges.rows() + " : " + edges.cols());
         return true;
     }
 
