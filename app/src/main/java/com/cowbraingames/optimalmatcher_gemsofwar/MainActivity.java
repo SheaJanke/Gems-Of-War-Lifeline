@@ -111,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
                         Uri imageUri = cropResult.getUri();
                         try{
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
-                            Board board = new Board(getApplicationContext(), bitmap);
                             BoardDetection boardDetection = new BoardDetection(bitmap, testImg, mainActivity);
+                            Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
                             runOnUiThread(() -> {
                                 grid = board.getGrid();
                                 boolean[][] selected = new boolean[8][8];

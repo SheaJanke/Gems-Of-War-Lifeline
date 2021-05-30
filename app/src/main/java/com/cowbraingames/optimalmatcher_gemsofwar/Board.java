@@ -25,17 +25,13 @@ import java.util.Random;
 
 public class Board {
 
-    private Bitmap board;
-    private Context context;
-    private int width;
-    private int height;
+    private final Context context;
+    private final Bitmap[][] orbs;
     private int[][] grid;
 
-    public Board(Context context, Bitmap board){
+    public Board(Context context, Bitmap[][] orbs){
         this.context = context;
-        this.board = board;
-        width = board.getWidth();
-        height = board.getHeight();
+        this.orbs = orbs;
         grid = new int[8][8];
         predictEachSquare();
     }
@@ -50,7 +46,7 @@ public class Board {
             TensorImage tImage  = new TensorImage(DataType.FLOAT32);
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
-                    Bitmap img = Bitmap.createBitmap(board, i * width/8, j * height/8, width/8, height/8);
+                    Bitmap img = orbs[i][j];
                     tImage.load(img);
                     tImage = imageProcessor.process(tImage);
                     // Creates inputs for reference.

@@ -27,26 +27,22 @@ import java.util.Map;
 public class BoardDetection {
     static{ System.loadLibrary("opencv_java4"); }
     private final Mat board, edges, circles;
-    private Mat cropped;
-    private Bitmap fullBoard;
-    private Bitmap compressedBoard;
-    private Bitmap testCrop;
+    private final Bitmap fullBoard;
+    private final Bitmap[][] orbs;
 
     public BoardDetection(Bitmap boardBitmap, ImageView testImg, Activity mainActivity){
         board = new Mat();
         edges = new Mat();
         circles = new Mat();
-        cropped = new Mat();
         fullBoard = boardBitmap;
+        orbs = new Bitmap[8][8];
         Bitmap bmp32 = boardBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        compressedBoard = Bitmap.createScaledBitmap(bmp32, bmp32.getWidth()/6, bmp32.getHeight()/6, true);
+        Bitmap compressedBoard = Bitmap.createScaledBitmap(bmp32, bmp32.getWidth() / 6, bmp32.getHeight() / 6, true);
         Utils.bitmapToMat(compressedBoard, board);
         detectEdges();
         detectCircles();
-        drawCircles();
         Bitmap img = matToBitmap(edges);
-        Bitmap test = Bitmap.createBitmap(compressedBoard, 50, 50, 50, 50);
-        mainActivity.runOnUiThread(() -> testImg.setImageBitmap(testCrop));
+        mainActivity.runOnUiThread(() -> testImg.setImageBitmap(img));
 
     }
 
@@ -150,12 +146,21 @@ public class BoardDetection {
                 int squareDim = (int)(2.2*medianRadius);
                 Rect rectCrop = new Rect((int)averageCenter.x - squareDim/2, (int)averageCenter.y - squareDim/2, squareDim, squareDim);
                 Imgproc.rectangle(edges, rectCrop, new Scalar(255,255,255), 3);
-                testCrop = Bitmap.createBitmap(fullBoard, rectCrop.x * 6, rectCrop.y*6, rectCrop.width*6, rectCrop.height*6);
-                System.out.println(averageCenter.x + " " + averageCenter.y);
+                orbs[i][j] = getCroppedBitmap(averageCenter, medianRadius);
             }
         }
-        System.out.println(edges.rows() + " : " + edges.cols());
         return true;
+    }
+
+    private Bitmap getCroppedBitmap(Point circleCenter, int radius){
+        int squareDim = (int)(2.2*radius*6);
+        int targetX = (int) (circleCenter.x * 6 - squareDim/2);
+        int targetY = (int) (circleCenter.y * 6 - squareDim/2);
+        int x = Math.max(targetX, 0);
+        int y = Math.max(targetY, 0);
+        int width = Math.min(squareDim, fullBoard.getWidth() - x);
+        int height = Math.min(squareDim, fullBoard.getHeight() - y);
+        return Bitmap.createBitmap(fullBoard, x, y, width, height);
     }
 
     private Point averagePoint(Point p1, Point p2){
@@ -282,5 +287,9 @@ public class BoardDetection {
             Log.d("Exception",e.getMessage());
         }
         return bmp;
+    }
+
+    public Bitmap[][] getOrbs(){
+        return orbs;
     }
 }
