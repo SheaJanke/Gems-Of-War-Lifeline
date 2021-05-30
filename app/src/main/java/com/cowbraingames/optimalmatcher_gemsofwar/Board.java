@@ -66,15 +66,6 @@ public class Board {
                         }
                     }
                     grid[j][i] = maxIndex;
-                    /*
-                    ImageProcessor imageProcessor2 = new ImageProcessor.Builder()
-                            .add(new ResizeOp(224,224, ResizeOp.ResizeMethod.BILINEAR))
-                            .build();
-                    TensorImage tImage2  = new TensorImage(DataType.UINT8);
-                    tImage2.load(img);
-                    tImage2 = imageProcessor2.process(tImage2);
-                    saveBitmap(tImage2.getBitmap(), maxVal > 0.9 ? maxIndex: -1);
-                     */
                 }
             }
             // Releases model resources if no longer used.

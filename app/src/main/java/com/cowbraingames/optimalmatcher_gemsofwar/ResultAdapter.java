@@ -17,10 +17,12 @@ import java.util.ArrayList;
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
     private final Context ct;
     private final ArrayList<ResultPair> displayResults;
+    private final boolean hasExtraTurn;
 
     public ResultAdapter(Context ct, Result result){
         this.ct = ct;
         this.displayResults = result.getDisplayResults();
+        this.hasExtraTurn = result.getExtraTurn();
     }
 
     @NonNull
@@ -28,17 +30,20 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
     public ResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(ct);
         View view = inflater.inflate(R.layout.result_item, parent, false);
-        parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("Clicked3");
-            }
-        });
+        parent.setOnClickListener(view1 -> System.out.println("Clicked3"));
         return new ResultViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ResultViewHolder holder, int position) {
+        if(hasExtraTurn){
+            if(position == 0){
+                // Draw the extra turn
+                holder.orbType.setImageResource(R.drawable.extra_turn);
+                return;
+            }
+            position--;
+        }
         ResultPair pair = displayResults.get(position);
         holder.orbType.setImageResource(ImageAdapter.orbID[pair.orbType]);
         holder.numOrbs.setText(String.valueOf(pair.numOrbs));
@@ -46,7 +51,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
 
     @Override
     public int getItemCount() {
-        return displayResults.size();
+        return displayResults.size() + (hasExtraTurn ? 1 : 0);
     }
 
     public class ResultViewHolder extends RecyclerView.ViewHolder {
