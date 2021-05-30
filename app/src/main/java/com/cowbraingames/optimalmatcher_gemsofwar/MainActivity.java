@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView testImg;
     private Context context;
     private Activity mainActivity;
+    private ProgressBar spinner;
     private ContentValues values;
     private Uri imageUri;
     private String imagePath;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         gridView = findViewById(R.id.board);
         resultsList = findViewById(R.id.results_list);
         testImg = findViewById(R.id.testImg);
+        spinner = findViewById(R.id.spinner);
         setSupportActionBar(toolbar);
 
 
@@ -116,11 +119,12 @@ public class MainActivity extends AppCompatActivity {
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .start(MainActivity.this);
                  */
-                String fileName = "boardImg";
+                String fileName = "boardImg.png";
                 File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 System.out.println("Here1");
                 try {
-                    File imageFile = File.createTempFile(fileName, ".png", storageDirectory);
+                    File imageFile = new File(storageDirectory, fileName);
+                    imageFile.createNewFile();
                     imagePath = imageFile.getAbsolutePath();
                     System.out.println("Here2");
                     Uri imgUri = FileProvider.getUriForFile(MainActivity.this, "com.cowbraingames.optimalmatcher_gemsofwar.fileprovider", imageFile);
@@ -194,49 +198,36 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case USE_CAMERA:
                 if(resultCode == Activity.RESULT_OK){
-                    System.out.println(imagePath);
+                    spinner.setVisibility(View.VISIBLE);
                     Bitmap boardBitmap = BitmapFactory.decodeFile(imagePath);
-                    testImg.setImageBitmap(boardBitmap);
-                }
-                new Thread(() -> {
-                    try{
-                        /*
-                        BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
-                        Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
-                        runOnUiThread(() -> {
-                            grid = board.getGrid();
-                            boolean[][] selected = new boolean[8][8];
-                            gridView.setAdapter(new ImageAdapter(context, grid, selected));
-                            gridView.invalidateViews();
-                            results = BoardUtils.getResults(grid);
-                            results.sort((result1, result2) -> {
-                                if (result1.totalMatched() != result2.totalMatched()) {
-                                    return result2.totalMatched() - result1.totalMatched();
-                                }
-                                return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
+                    new Thread(() -> {
+                        try{
+                            BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
+                            Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
+                            runOnUiThread(() -> {
+                                grid = board.getGrid();
+                                boolean[][] selected = new boolean[8][8];
+                                gridView.setAdapter(new ImageAdapter(context, grid, selected));
+                                gridView.invalidateViews();
+                                results = BoardUtils.getResults(grid);
+                                results.sort((result1, result2) -> {
+                                    if (result1.totalMatched() != result2.totalMatched()) {
+                                        return result2.totalMatched() - result1.totalMatched();
+                                    }
+                                    return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
+                                });
+                                resultsList.setLayoutManager(new LinearLayoutManager(context));
+                                ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, board, gridView);
+                                resultsList.setAdapter(resultsListAdapter);
+                                spinner.setVisibility(View.INVISIBLE);
                             });
-                            resultsList.setLayoutManager(new LinearLayoutManager(context));
-                            ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, board, gridView);
-                            resultsList.setAdapter(resultsListAdapter);
-                        });
-
-                         */
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
             default:
                 break;
         }
     }
-
-    public String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
 }
