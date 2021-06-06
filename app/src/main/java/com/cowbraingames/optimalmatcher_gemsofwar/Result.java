@@ -2,17 +2,17 @@ package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class Result {
     static final int ORB_TYPES = 9;
-    private final int[] matched;
+    private final int[] matchedOrbs;
+    private int[][] finalBoard;
     private boolean extraTurn;
     public final int r1, c1, r2, c2;
 
 
     public Result(int r1, int c1, int r2, int c2){
-        matched = new int[9];
+        matchedOrbs = new int[9];
         extraTurn = false;
         this.r1 = r1;
         this.c1 = c1;
@@ -21,15 +21,21 @@ public class Result {
     }
 
     public void addMatched(int orbIndex){
-        matched[orbIndex]++;
+        matchedOrbs[orbIndex]++;
     }
 
     public int totalMatched(){
         int total = 0;
         for(int i = 0; i < ORB_TYPES; i++){
-            total += matched[i];
+            total += matchedOrbs[i];
         }
         return total;
+    }
+
+    public void setFinalBoard(int[][] finalBoard) { this.finalBoard = finalBoard; }
+
+    public int[][] getFinalBoard(){
+        return finalBoard;
     }
 
     public void setExtraTurn(boolean extraTurn){
@@ -40,25 +46,18 @@ public class Result {
         return extraTurn;
     }
 
-    public int[] getMatched(){
-        return matched;
-    }
-
     public ArrayList<ResultPair> getDisplayResults(){
         ArrayList<ResultPair> displayResults = new ArrayList<>();
         for(int i = 0; i < ORB_TYPES; i++){
-            if(matched[i] > 0){
-                displayResults.add(new ResultPair(matched[i], i));
+            if(matchedOrbs[i] > 0){
+                displayResults.add(new ResultPair(matchedOrbs[i], i));
             }
         }
-        Collections.sort(displayResults, new Comparator<ResultPair>() {
-            @Override
-            public int compare(ResultPair r1, ResultPair r2) {
-                if(r1.numOrbs != r2.numOrbs){
-                    return r2.numOrbs - r1.numOrbs;
-                }else{
-                    return r1.orbType - r2.orbType;
-                }
+        Collections.sort(displayResults, (r1, r2) -> {
+            if(r1.numOrbs != r2.numOrbs){
+                return r2.numOrbs - r1.numOrbs;
+            }else{
+                return r1.orbType - r2.orbType;
             }
         });
         return displayResults;

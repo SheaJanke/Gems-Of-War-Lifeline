@@ -43,6 +43,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     boolean[][] selected = new boolean[8][8];
                     gridView.setAdapter(new ImageAdapter(context, grid, selected));
                     gridView.invalidateViews();
-                    results = BoardUtils.getResults(grid);
+                    results = BoardUtils.getSortedResults(grid);
                     results.sort((result1, result2) -> {
                         if(result1.getExtraTurn() != result2.getExtraTurn()){
                             if(result1.getExtraTurn()){

@@ -23,18 +23,6 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.block
     };
 
-    public static Integer[] highlightedOrbID = {
-            R.drawable.skull_h,
-            R.drawable.super_skull_h,
-            R.drawable.fire_h,
-            R.drawable.water_h,
-            R.drawable.earth_h,
-            R.drawable.ground_h,
-            R.drawable.light_h,
-            R.drawable.dark_h,
-            R.drawable.block_h
-    };
-
     public ImageAdapter(Context c, int[][] grid, boolean[][] selected){
         mContext = c;
         this.grid = grid;

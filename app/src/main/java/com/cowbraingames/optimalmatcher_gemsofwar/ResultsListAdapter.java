@@ -2,8 +2,11 @@ package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.gesture.Gesture;
 import android.graphics.Color;
 import android.util.Pair;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.GridView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,12 +52,24 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         return new ResultListViewHolder(view);
     }
 
-    private void updateHighlighted(int position){
+    private void updateHighlighted(@NonNull final ResultListViewHolder holder, int position){
         boolean[][] selected = new boolean[8][8];
         Result result = results.get(position);
         selected[result.r1][result.c1] = true;
         selected[result.r2][result.c2] = true;
         gridView.setAdapter(new ImageAdapter(ct, board.getGrid(), selected));
+        for(int i = 0; i < rows.size(); i++){
+            if(rows.get(i).second%2 == 0){
+                rows.get(i).first.setBackgroundResource(R.color.boardDark);
+            }else{
+                rows.get(i).first.setBackgroundResource(R.color.boardLight);
+            }
+        }
+        if(position%2 == 0) {
+            holder.resultRow.setBackgroundResource(R.drawable.dark_border);
+        }else{
+            holder.resultRow.setBackgroundResource(R.drawable.light_border);
+        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -70,41 +86,34 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         holder.resultRow.setLayoutManager(linearLayoutManager);
         ResultAdapter resultAdapter = new ResultAdapter(ct, results.get(position));
         holder.resultRow.setAdapter(resultAdapter);
+
+        class GestureListener extends GestureDetector.SimpleOnGestureListener {
+            @Override
+            public boolean onSingleTapUp(MotionEvent event) {
+                updateHighlighted(holder, position);
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent event) {
+                updateHighlighted(holder, position);
+                Intent intent = new Intent(ct, FinalBoardActivity.class);
+                ct.startActivity(intent);
+                System.out.println("long touch");
+            }
+        }
+
         holder.resultRow.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            private static final int MAX_CLICK_DURATION = 200;
-            private long startClickTime;
+            private final GestureDetectorCompat gestureDetector = new GestureDetectorCompat(ct, new GestureListener());
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                switch (e.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        startClickTime = Calendar.getInstance().getTimeInMillis();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
-                        if(clickDuration < MAX_CLICK_DURATION) {
-                            //click event has occurred
-                            updateHighlighted(position);
-                            for(int i = 0; i < rows.size(); i++){
-                                if(rows.get(i).second%2 == 0){
-                                    rows.get(i).first.setBackgroundResource(R.color.boardDark);
-                                }else{
-                                    rows.get(i).first.setBackgroundResource(R.color.boardLight);
-                                }
-                            }
-                            if(position%2 == 0) {
-                                holder.resultRow.setBackgroundResource(R.drawable.dark_border);
-                            }else{
-                                holder.resultRow.setBackgroundResource(R.drawable.light_border);
-                            }
-                        }
-                    }
-                }
+                gestureDetector.onTouchEvent(e);
                 return false;
             }
 
             @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            }
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
