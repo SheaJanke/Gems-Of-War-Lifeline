@@ -159,6 +159,7 @@ public class BoardUtils {
                     while (matchBoard(boardCopy, result)){
                         fillGaps(boardCopy);
                     }
+                    result.setFinalBoard(boardCopy);
                     if(result.totalMatched() > 0){
                         results.add(result);
                     }

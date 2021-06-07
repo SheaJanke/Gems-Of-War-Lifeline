@@ -28,7 +28,7 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
 
     private final Context ct;
     private final ArrayList<Result> results;
-    private final Board board;
+    private final int[][] board;
     private final GridView gridView;
     private final Color[] colors = {
             Color.valueOf(105,105,105,255),
@@ -36,7 +36,7 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
     };
     private final ArrayList<Pair<RecyclerView, Integer>> rows;
 
-    public ResultsListAdapter(Context ct, ArrayList<Result> results, Board board, GridView gridView){
+    public ResultsListAdapter(Context ct, ArrayList<Result> results, int[][] board, GridView gridView){
         rows = new ArrayList<>();
         this.ct = ct;
         this.results = results;
@@ -57,7 +57,7 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         Result result = results.get(position);
         selected[result.r1][result.c1] = true;
         selected[result.r2][result.c2] = true;
-        gridView.setAdapter(new ImageAdapter(ct, board.getGrid(), selected));
+        gridView.setAdapter(new ImageAdapter(ct, board, selected));
         for(int i = 0; i < rows.size(); i++){
             if(rows.get(i).second%2 == 0){
                 rows.get(i).first.setBackgroundResource(R.color.boardDark);
@@ -98,8 +98,15 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
             public void onLongPress(MotionEvent event) {
                 updateHighlighted(holder, position);
                 Intent intent = new Intent(ct, FinalBoardActivity.class);
+                int[][] finalBoard = results.get(position).getFinalBoard();
+                int[] flatFinalBoard = new int[64];
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0; j < 8; j++){
+                        flatFinalBoard[8*i + j] = finalBoard[i][j];
+                    }
+                }
+                intent.putExtra("flatFinalBoard", flatFinalBoard);
                 ct.startActivity(intent);
-                System.out.println("long touch");
             }
         }
 

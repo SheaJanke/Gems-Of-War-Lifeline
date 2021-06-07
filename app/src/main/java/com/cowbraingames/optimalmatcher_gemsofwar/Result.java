@@ -13,6 +13,7 @@ public class Result {
 
     public Result(int r1, int c1, int r2, int c2){
         matchedOrbs = new int[9];
+        finalBoard = new int[8][8];
         extraTurn = false;
         this.r1 = r1;
         this.c1 = c1;
@@ -32,7 +33,14 @@ public class Result {
         return total;
     }
 
-    public void setFinalBoard(int[][] finalBoard) { this.finalBoard = finalBoard; }
+    public void setFinalBoard(int[][] finalBoard) {
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++){
+                this.finalBoard[i][j] = finalBoard[i][j];
+            }
+        }
+    }
 
     public int[][] getFinalBoard(){
         return finalBoard;

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,11 +22,9 @@ public class FinalBoardActivity extends AppCompatActivity {
 
     private GridView gridView;
     private ArrayList<Result> results;
-    private int[][] grid;
+    private int[][] finalBoard;
     private RecyclerView resultsList;
-    private ImageView testImg;
     private Context context;
-    private ProgressBar spinner;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
@@ -39,6 +38,15 @@ public class FinalBoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        finalBoard = new int[8][8];
+        int[] flatFinalBoard = getIntent().getIntArrayExtra("flatFinalBoard");
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                assert flatFinalBoard != null;
+                assert flatFinalBoard.length == 64;
+                finalBoard[i][j] = flatFinalBoard[8*i + j];
+            }
+        }
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,8 +56,17 @@ public class FinalBoardActivity extends AppCompatActivity {
 
         gridView = findViewById(R.id.board);
         resultsList = findViewById(R.id.results_list);
-        testImg = findViewById(R.id.testImg);
-        spinner = findViewById(R.id.spinner);
         findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+        fillBoardAndResults();
+    }
+
+    private void fillBoardAndResults() {
+        boolean[][] selected = new boolean[8][8];
+        gridView.setAdapter(new ImageAdapter(context, finalBoard, selected));
+        gridView.invalidateViews();
+        results = BoardUtils.getSortedResults(finalBoard);
+        resultsList.setLayoutManager(new LinearLayoutManager(context));
+        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, finalBoard, gridView);
+        resultsList.setAdapter(resultsListAdapter);
     }
 }

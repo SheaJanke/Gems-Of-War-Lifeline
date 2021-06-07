@@ -151,21 +151,8 @@ public class MainActivity extends AppCompatActivity {
                     gridView.setAdapter(new ImageAdapter(context, grid, selected));
                     gridView.invalidateViews();
                     results = BoardUtils.getSortedResults(grid);
-                    results.sort((result1, result2) -> {
-                        if(result1.getExtraTurn() != result2.getExtraTurn()){
-                            if(result1.getExtraTurn()){
-                                return -1;
-                            }else{
-                                return 1;
-                            }
-                        }
-                        if (result1.totalMatched() != result2.totalMatched()) {
-                            return result2.totalMatched() - result1.totalMatched();
-                        }
-                        return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
-                    });
                     resultsList.setLayoutManager(new LinearLayoutManager(context));
-                    ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, board, gridView);
+                    ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, grid, gridView);
                     resultsList.setAdapter(resultsListAdapter);
                     spinner.setVisibility(View.INVISIBLE);
                 });
