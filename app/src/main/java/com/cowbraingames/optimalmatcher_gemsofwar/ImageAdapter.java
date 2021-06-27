@@ -20,7 +20,8 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.ground,
             R.drawable.light,
             R.drawable.dark,
-            R.drawable.block
+            R.drawable.block,
+            R.drawable.lycanthropy
     };
 
     public ImageAdapter(Context c, int[][] grid, boolean[][] selected){

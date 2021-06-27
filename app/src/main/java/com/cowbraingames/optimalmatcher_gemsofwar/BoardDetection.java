@@ -51,7 +51,7 @@ public class BoardDetection {
         double totalPixels = board.rows() * board.cols();
         double curWhite = 0;
         int threshold1 = 500;
-        while(curWhite/totalPixels < 0.12){
+        while(curWhite/totalPixels < 0.1){
             Imgproc.Canny(board, edges, threshold1, 2.5*threshold1);
             curWhite = Core.countNonZero(edges);
             //System.out.println("Threshold: " + threshold1 + " ratio: " + curWhite/totalPixels);

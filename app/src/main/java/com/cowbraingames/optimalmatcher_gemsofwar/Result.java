@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Result {
-    static final int ORB_TYPES = 9;
+    static final int ORB_TYPES = 10;
     private final int[] matchedOrbs;
     private int[][] finalBoard;
     private boolean extraTurn;
@@ -12,7 +12,7 @@ public class Result {
 
 
     public Result(int r1, int c1, int r2, int c2){
-        matchedOrbs = new int[9];
+        matchedOrbs = new int[ORB_TYPES];
         finalBoard = new int[8][8];
         extraTurn = false;
         this.r1 = r1;

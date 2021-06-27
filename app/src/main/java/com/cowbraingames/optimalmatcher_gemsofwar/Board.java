@@ -39,8 +39,10 @@ public class Board {
     private void predictEachSquare(){
         try {
             ModelUnquant model = ModelUnquant.newInstance(context);
-            ImageProcessor imageProcessor = new ImageProcessor.Builder()
+            ImageProcessor imageResizer = new ImageProcessor.Builder()
                     .add(new ResizeOp(224,224, ResizeOp.ResizeMethod.BILINEAR))
+                    .build();
+            ImageProcessor imageNoramlizer = new ImageProcessor.Builder()
                     .add(new NormalizeOp(127.5f, 127.5f))
                     .build();
             TensorImage tImage  = new TensorImage(DataType.FLOAT32);
@@ -48,7 +50,8 @@ public class Board {
                 for(int j = 0; j < 8; j++){
                     Bitmap img = orbs[i][j];
                     tImage.load(img);
-                    tImage = imageProcessor.process(tImage);
+                    tImage = imageResizer.process(tImage);
+                    tImage = imageNoramlizer.process(tImage);
                     // Creates inputs for reference.
                     TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
                     inputFeature0.loadBuffer(tImage.getBuffer());
@@ -65,6 +68,9 @@ public class Board {
                             maxVal = results[k];
                         }
                     }
+                    tImage.load(img);
+                    tImage = imageResizer.process(tImage);
+                    saveBitmap(tImage.getBitmap(), maxIndex);
                     grid[j][i] = maxIndex;
                 }
             }
@@ -72,6 +78,7 @@ public class Board {
             model.close();
         } catch (IOException e) {
             // TODO Handle the exception
+            e.printStackTrace();
         }
     }
 

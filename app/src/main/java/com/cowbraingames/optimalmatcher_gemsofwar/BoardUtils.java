@@ -15,6 +15,7 @@ public class BoardUtils {
     static final int LIGHT = 6;
     static final int DARK = 7;
     static final int BLOCK = 8;
+    static final int LYCANTHROPY = 9;
 
     private static boolean isMatching(int orbType1, int orbType2){
         if(orbType1 == BLOCK || orbType2 == BLOCK || orbType1 == EMPTY || orbType2 == EMPTY){
@@ -22,7 +23,9 @@ public class BoardUtils {
         }
         return orbType1 == orbType2 ||
                 (orbType1 == SKULL && orbType2 == SUPER_SKULL) ||
-                (orbType1 == SUPER_SKULL && orbType2 == SKULL);
+                (orbType1 == SUPER_SKULL && orbType2 == SKULL) ||
+                (orbType1 == DARK && orbType2 == LYCANTHROPY) ||
+                (orbType1 == LYCANTHROPY && orbType2 == DARK);
     }
 
     private static boolean canMove(int orbType){
