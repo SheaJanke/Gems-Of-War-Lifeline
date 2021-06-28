@@ -11,6 +11,7 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private int[][] grid;
     private boolean[][] selcted;
+    private int imgSize;
     public static Integer[] orbID = {
             R.drawable.skull,
             R.drawable.super_skull,
@@ -24,10 +25,11 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.lycanthropy
     };
 
-    public ImageAdapter(Context c, int[][] grid, boolean[][] selected){
+    public ImageAdapter(Context c, int[][] grid, boolean[][] selected, int imgSize){
         mContext = c;
         this.grid = grid;
         this.selcted = selected;
+        this.imgSize = imgSize;
     }
 
     @Override
@@ -50,10 +52,8 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if(view == null){
             imageView = new ImageView(mContext);
-            int height = viewGroup.getLayoutParams().height/8;
-            int width = viewGroup.getLayoutParams().width/8;
-            imageView.setLayoutParams(new GridView.LayoutParams(width, height));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new GridView.LayoutParams(imgSize, imgSize));
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }else{
             imageView = (ImageView) view;
         }

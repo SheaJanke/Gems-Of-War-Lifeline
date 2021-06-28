@@ -2,35 +2,29 @@ package com.cowbraingames.optimalmatcher_gemsofwar;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
-import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -38,12 +32,7 @@ import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -138,17 +127,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleCameraResult(){
+    private void handleCameraResult() {
         spinner.setVisibility(View.VISIBLE);
-        Bitmap boardBitmap = BitmapFactory.decodeFile(imagePath);
         new Thread(() -> {
             try{
+                Bitmap boardBitmap = getRotatedBoard();
                 BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
                 Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
                 runOnUiThread(() -> {
                     grid = board.getGrid();
                     boolean[][] selected = new boolean[8][8];
-                    gridView.setAdapter(new ImageAdapter(context, grid, selected));
+                    gridView.setAdapter(new ImageAdapter(context, grid, selected, gridView.getColumnWidth()));
                     gridView.invalidateViews();
                     results = BoardUtils.getSortedResults(grid);
                     resultsList.setLayoutManager(new LinearLayoutManager(context));
@@ -160,5 +149,39 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private Bitmap getRotatedBoard() throws IOException {
+        Bitmap boardBitmap = BitmapFactory.decodeFile(imagePath);
+        ExifInterface ei = new ExifInterface(imagePath);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+        Bitmap rotatedBitmap;
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitmap = rotateBitmap(boardBitmap, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitmap = rotateBitmap(boardBitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitmap = rotateBitmap(boardBitmap, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitmap = boardBitmap;
+        }
+        return rotatedBitmap;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 }

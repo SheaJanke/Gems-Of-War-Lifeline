@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
@@ -40,10 +42,9 @@ public class FinalBoardActivity extends AppCompatActivity {
         context = this;
         finalBoard = new int[8][8];
         int[] flatFinalBoard = getIntent().getIntArrayExtra("flatFinalBoard");
+        assert flatFinalBoard != null;
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
-                assert flatFinalBoard != null;
-                assert flatFinalBoard.length == 64;
                 finalBoard[i][j] = flatFinalBoard[8*i + j];
             }
         }
@@ -57,12 +58,17 @@ public class FinalBoardActivity extends AppCompatActivity {
         gridView = findViewById(R.id.board);
         resultsList = findViewById(R.id.results_list);
         findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-        fillBoardAndResults();
+
+        MessageQueue.IdleHandler handler = () -> {
+            fillBoardAndResults();
+            return false;
+        };
+        Looper.myQueue().addIdleHandler(handler);
     }
 
     private void fillBoardAndResults() {
         boolean[][] selected = new boolean[8][8];
-        gridView.setAdapter(new ImageAdapter(context, finalBoard, selected));
+        gridView.setAdapter(new ImageAdapter(context, finalBoard, selected, gridView.getColumnWidth()));
         gridView.invalidateViews();
         results = BoardUtils.getSortedResults(finalBoard);
         resultsList.setLayoutManager(new LinearLayoutManager(context));

@@ -70,7 +70,7 @@ public class Board {
                     }
                     tImage.load(img);
                     tImage = imageResizer.process(tImage);
-                    saveBitmap(tImage.getBitmap(), maxIndex);
+                    //saveBitmap(tImage.getBitmap(), maxIndex);
                     grid[j][i] = maxIndex;
                 }
             }

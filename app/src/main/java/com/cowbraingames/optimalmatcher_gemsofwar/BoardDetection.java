@@ -67,7 +67,7 @@ public class BoardDetection {
         System.out.println("Starting HoughCircles");
         int minDimension = Math.min(edges.rows(), edges.cols());
         int maxRadius = minDimension/16;
-        int minRadius = (int)(maxRadius/2.25);
+        int minRadius = (int)(maxRadius/1.25);
         int curThreshold = 200;
         boolean foundBoard = false;
         while(!foundBoard){

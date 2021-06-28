@@ -57,7 +57,7 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         Result result = results.get(position);
         selected[result.r1][result.c1] = true;
         selected[result.r2][result.c2] = true;
-        gridView.setAdapter(new ImageAdapter(ct, board, selected));
+        gridView.setAdapter(new ImageAdapter(ct, board, selected, gridView.getColumnWidth()));
         for(int i = 0; i < rows.size(); i++){
             if(rows.get(i).second%2 == 0){
                 rows.get(i).first.setBackgroundResource(R.color.boardDark);
