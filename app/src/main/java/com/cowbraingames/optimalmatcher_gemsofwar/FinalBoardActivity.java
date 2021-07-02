@@ -41,11 +41,13 @@ public class FinalBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         finalBoard = new int[8][8];
-        int[] flatFinalBoard = getIntent().getIntArrayExtra("flatFinalBoard");
+        String flatFinalBoard = getIntent().getStringExtra("FLAT_FINAL_BOARD");
+        System.out.println("Result: " + flatFinalBoard);
         assert flatFinalBoard != null;
+        String[] orbs = flatFinalBoard.split(" ");
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
-                finalBoard[i][j] = flatFinalBoard[8*i + j];
+                finalBoard[i][j] = Integer.parseInt(orbs[8*i + j]);
             }
         }
         setContentView(R.layout.activity_main);
@@ -72,7 +74,7 @@ public class FinalBoardActivity extends AppCompatActivity {
         gridView.invalidateViews();
         results = BoardUtils.getSortedResults(finalBoard);
         resultsList.setLayoutManager(new LinearLayoutManager(context));
-        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, finalBoard, gridView);
+        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(getApplicationContext(), results, finalBoard, gridView, false);
         resultsList.setAdapter(resultsListAdapter);
     }
 }

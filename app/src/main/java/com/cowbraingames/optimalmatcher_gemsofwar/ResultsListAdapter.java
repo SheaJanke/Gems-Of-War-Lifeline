@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Pair;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -35,13 +36,15 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
             Color.valueOf(64,64,64,255)
     };
     private final ArrayList<Pair<RecyclerView, Integer>> rows;
+    private final boolean enableLongTouch;
 
-    public ResultsListAdapter(Context ct, ArrayList<Result> results, int[][] board, GridView gridView){
+    public ResultsListAdapter(Context ct, ArrayList<Result> results, int[][] board, GridView gridView, boolean enableLongTouch){
         rows = new ArrayList<>();
         this.ct = ct;
         this.results = results;
         this.board = board;
         this.gridView = gridView;
+        this.enableLongTouch = enableLongTouch;
     }
 
     @NonNull
@@ -91,22 +94,30 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
             @Override
             public boolean onSingleTapUp(MotionEvent event) {
                 updateHighlighted(holder, position);
+                System.out.println("Position clicked: " + position);
                 return true;
             }
 
             @Override
             public void onLongPress(MotionEvent event) {
                 updateHighlighted(holder, position);
-                Intent intent = new Intent(ct, FinalBoardActivity.class);
-                int[][] finalBoard = results.get(position).getFinalBoard();
-                int[] flatFinalBoard = new int[64];
-                for(int i = 0; i < 8; i++){
-                    for(int j = 0; j < 8; j++){
-                        flatFinalBoard[8*i + j] = finalBoard[i][j];
+                if(enableLongTouch){
+                    Intent intent = new Intent(ct, FinalBoardActivity.class);
+                    String flatFinalBoard = "";
+                    int[][] finalBoard = results.get(position).getFinalBoard();
+                    System.out.println("Position pressed: " + position);
+                    //System.out.println("Final board:");
+                    for(int i = 0; i < 8; i++){
+                        for(int j = 0; j < 8; j++){
+                            //System.out.print(finalBoard[i][j] == -1 ? 1 : 0);
+                            flatFinalBoard += finalBoard[i][j] + " ";
+                        }
+                        //System.out.println();
                     }
+                    //System.out.println(flatFinalBoard);
+                    intent.putExtra("FLAT_FINAL_BOARD", flatFinalBoard);
+                    ct.startActivity(intent);
                 }
-                intent.putExtra("flatFinalBoard", flatFinalBoard);
-                ct.startActivity(intent);
             }
         }
 

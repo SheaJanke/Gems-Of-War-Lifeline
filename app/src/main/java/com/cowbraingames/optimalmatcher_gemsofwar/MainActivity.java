@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     gridView.invalidateViews();
                     results = BoardUtils.getSortedResults(grid);
                     resultsList.setLayoutManager(new LinearLayoutManager(context));
-                    ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, grid, gridView);
+                    ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, grid, gridView, true);
                     resultsList.setAdapter(resultsListAdapter);
                     spinner.setVisibility(View.INVISIBLE);
                 });

@@ -158,11 +158,11 @@ public class BoardUtils {
                     int temp = boardCopy[i][j];
                     boardCopy[i][j] = boardCopy[i][j+1];
                     boardCopy[i][j+1] = temp;
-                    Result result = new Result(i, j, i, j+1);
+                    Result result = new Result(i, j, i, j+1, boardCopy);
                     while (matchBoard(boardCopy, result)){
                         fillGaps(boardCopy);
                     }
-                    result.setFinalBoard(boardCopy);
+                    //result.setFinalBoard(boardCopy);
                     if(result.totalMatched() > 0){
                         results.add(result);
                     }
@@ -172,11 +172,11 @@ public class BoardUtils {
                     int temp = boardCopy[i][j];
                     boardCopy[i][j] = boardCopy[i+1][j];
                     boardCopy[i+1][j] = temp;
-                    Result result = new Result(i, j, i+1, j);
+                    Result result = new Result(i, j, i+1, j, boardCopy);
                     while (matchBoard(boardCopy, result)){
                         fillGaps(boardCopy);
                     }
-                    result.setFinalBoard(boardCopy);
+                    //result.setFinalBoard(boardCopy);
                     if(result.totalMatched() > 0){
                         results.add(result);
                     }

@@ -11,9 +11,9 @@ public class Result {
     public final int r1, c1, r2, c2;
 
 
-    public Result(int r1, int c1, int r2, int c2){
+    public Result(int r1, int c1, int r2, int c2, int[][] finalBoard){
         matchedOrbs = new int[ORB_TYPES];
-        finalBoard = new int[8][8];
+        this.finalBoard = finalBoard;
         extraTurn = false;
         this.r1 = r1;
         this.c1 = c1;
@@ -33,14 +33,21 @@ public class Result {
         return total;
     }
 
+    /*
     public void setFinalBoard(int[][] finalBoard) {
+        int unknownOrbs = 0;
         for(int i = 0; i < 8; i++)
         {
             for(int j = 0; j < 8; j++){
+                if(finalBoard[i][j] == -1){
+                    unknownOrbs++;
+                }
                 this.finalBoard[i][j] = finalBoard[i][j];
             }
         }
+        assert unknownOrbs == totalMatched();
     }
+    */
 
     public int[][] getFinalBoard(){
         return finalBoard;
