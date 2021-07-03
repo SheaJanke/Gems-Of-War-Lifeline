@@ -74,7 +74,7 @@ public class FinalBoardActivity extends AppCompatActivity {
         gridView.invalidateViews();
         results = BoardUtils.getSortedResults(finalBoard);
         resultsList.setLayoutManager(new LinearLayoutManager(context));
-        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(getApplicationContext(), results, finalBoard, gridView, false);
+        ResultsListAdapter resultsListAdapter = new ResultsListAdapter(getApplicationContext(), results);
         resultsList.setAdapter(resultsListAdapter);
     }
 }

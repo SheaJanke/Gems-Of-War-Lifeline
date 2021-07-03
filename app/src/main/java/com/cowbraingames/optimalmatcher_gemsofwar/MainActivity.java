@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Pair;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Result> results;
     private int[][] grid;
     private RecyclerView resultsList;
+    private ResultsListAdapter resultsListAdapter;
     private ImageView testImg;
     private Context context;
     private Activity mainActivity;
@@ -71,6 +74,57 @@ public class MainActivity extends AppCompatActivity {
                 startCameraActivity();
             }
         });
+
+        resultsList.addOnItemTouchListener(new RecyclerTouchListener(mainActivity, resultsList, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ArrayList<Pair<RecyclerView, Integer>> rows = resultsListAdapter.getRows();
+                updateHighlighted(rows, position);
+                System.out.println("onClick: " + position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                ArrayList<Pair<RecyclerView, Integer>> rows = resultsListAdapter.getRows();
+                updateHighlighted(rows, position);
+                Intent intent = new Intent(context, FinalBoardActivity.class);
+                String flatFinalBoard = "";
+                int[][] finalBoard = results.get(position).getFinalBoard();
+                System.out.println("Position pressed: " + position);
+                //System.out.println("Final board:");
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0; j < 8; j++){
+                        //System.out.print(finalBoard[i][j] == -1 ? 1 : 0);
+                        flatFinalBoard += finalBoard[i][j] + " ";
+                    }
+                    //System.out.println();
+                }
+                //System.out.println(flatFinalBoard);
+                intent.putExtra("FLAT_FINAL_BOARD", flatFinalBoard);
+                context.startActivity(intent);
+            }
+        }));
+    }
+
+    private void updateHighlighted(ArrayList<Pair<RecyclerView, Integer>> rows, int position){
+        boolean[][] selected = new boolean[8][8];
+        Result result = results.get(position);
+        selected[result.r1][result.c1] = true;
+        selected[result.r2][result.c2] = true;
+        gridView.setAdapter(new ImageAdapter(context, grid, selected, gridView.getColumnWidth()));
+        for(int i = 0; i < rows.size(); i++){
+            if(rows.get(i).second%2 == 0){
+                rows.get(i).first.setBackgroundResource(R.color.boardDark);
+            }else{
+                rows.get(i).first.setBackgroundResource(R.color.boardLight);
+            }
+        }
+        RecyclerView resultRow = rows.get(position).first;
+        if(position%2 == 0) {
+            resultRow.setBackgroundResource(R.drawable.dark_border);
+        }else{
+            resultRow.setBackgroundResource(R.drawable.light_border);
+        }
     }
 
     private void requestPermissions(){
@@ -141,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     gridView.invalidateViews();
                     results = BoardUtils.getSortedResults(grid);
                     resultsList.setLayoutManager(new LinearLayoutManager(context));
-                    ResultsListAdapter resultsListAdapter = new ResultsListAdapter(context, results, grid, gridView, true);
+                    resultsListAdapter = new ResultsListAdapter(context, results);
                     resultsList.setAdapter(resultsListAdapter);
                     spinner.setVisibility(View.INVISIBLE);
                 });

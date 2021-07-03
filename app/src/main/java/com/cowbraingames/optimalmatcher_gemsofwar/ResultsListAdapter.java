@@ -29,22 +29,12 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
 
     private final Context ct;
     private final ArrayList<Result> results;
-    private final int[][] board;
-    private final GridView gridView;
-    private final Color[] colors = {
-            Color.valueOf(105,105,105,255),
-            Color.valueOf(64,64,64,255)
-    };
     private final ArrayList<Pair<RecyclerView, Integer>> rows;
-    private final boolean enableLongTouch;
 
-    public ResultsListAdapter(Context ct, ArrayList<Result> results, int[][] board, GridView gridView, boolean enableLongTouch){
+    public ResultsListAdapter(Context ct, ArrayList<Result> results){
         rows = new ArrayList<>();
         this.ct = ct;
         this.results = results;
-        this.board = board;
-        this.gridView = gridView;
-        this.enableLongTouch = enableLongTouch;
     }
 
     @NonNull
@@ -53,26 +43,6 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         LayoutInflater inflater = LayoutInflater.from(ct);
         View view = inflater.inflate(R.layout.result_row, parent, false);
         return new ResultListViewHolder(view);
-    }
-
-    private void updateHighlighted(@NonNull final ResultListViewHolder holder, int position){
-        boolean[][] selected = new boolean[8][8];
-        Result result = results.get(position);
-        selected[result.r1][result.c1] = true;
-        selected[result.r2][result.c2] = true;
-        gridView.setAdapter(new ImageAdapter(ct, board, selected, gridView.getColumnWidth()));
-        for(int i = 0; i < rows.size(); i++){
-            if(rows.get(i).second%2 == 0){
-                rows.get(i).first.setBackgroundResource(R.color.boardDark);
-            }else{
-                rows.get(i).first.setBackgroundResource(R.color.boardLight);
-            }
-        }
-        if(position%2 == 0) {
-            holder.resultRow.setBackgroundResource(R.drawable.dark_border);
-        }else{
-            holder.resultRow.setBackgroundResource(R.drawable.light_border);
-        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -89,53 +59,6 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         holder.resultRow.setLayoutManager(linearLayoutManager);
         ResultAdapter resultAdapter = new ResultAdapter(ct, results.get(position));
         holder.resultRow.setAdapter(resultAdapter);
-
-        class GestureListener extends GestureDetector.SimpleOnGestureListener {
-            @Override
-            public boolean onSingleTapUp(MotionEvent event) {
-                updateHighlighted(holder, position);
-                System.out.println("Position clicked: " + position);
-                return true;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent event) {
-                updateHighlighted(holder, position);
-                if(enableLongTouch){
-                    Intent intent = new Intent(ct, FinalBoardActivity.class);
-                    String flatFinalBoard = "";
-                    int[][] finalBoard = results.get(position).getFinalBoard();
-                    System.out.println("Position pressed: " + position);
-                    //System.out.println("Final board:");
-                    for(int i = 0; i < 8; i++){
-                        for(int j = 0; j < 8; j++){
-                            //System.out.print(finalBoard[i][j] == -1 ? 1 : 0);
-                            flatFinalBoard += finalBoard[i][j] + " ";
-                        }
-                        //System.out.println();
-                    }
-                    //System.out.println(flatFinalBoard);
-                    intent.putExtra("FLAT_FINAL_BOARD", flatFinalBoard);
-                    ct.startActivity(intent);
-                }
-            }
-        }
-
-        holder.resultRow.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            private final GestureDetectorCompat gestureDetector = new GestureDetectorCompat(ct, new GestureListener());
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                gestureDetector.onTouchEvent(e);
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
-        });
     }
 
     @Override
@@ -143,7 +66,11 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         return results.size();
     }
 
-    public class ResultListViewHolder extends RecyclerView.ViewHolder{
+    public ArrayList<Pair<RecyclerView, Integer>> getRows(){
+        return rows;
+    }
+
+    public class ResultListViewHolder extends RecyclerView.ViewHolder {
         RecyclerView resultRow;
 
         public ResultListViewHolder(@NonNull View itemView) {
