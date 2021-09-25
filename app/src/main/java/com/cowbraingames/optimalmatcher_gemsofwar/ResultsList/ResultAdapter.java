@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
+import com.cowbraingames.optimalmatcher_gemsofwar.ImageAdapter;
+import com.cowbraingames.optimalmatcher_gemsofwar.R;
 
 import java.util.ArrayList;
 

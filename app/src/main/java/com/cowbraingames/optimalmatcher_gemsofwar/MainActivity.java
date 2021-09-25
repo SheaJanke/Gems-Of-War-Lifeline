@@ -1,50 +1,41 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Pair;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
+
+import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsListAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int USE_CAMERA = 2;
     private GridView gridView;
-    private ArrayList<Result> results;
     private int[][] grid;
-    private RecyclerView resultsList;
+    private ResultsList resultsList;
     private ResultsListAdapter resultsListAdapter;
     private ImageView testImg;
     private Context context;
@@ -60,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         gridView = findViewById(R.id.board);
-        resultsList = findViewById(R.id.results_list);
+        resultsList = new ResultsList(context, findViewById(R.id.results_list));
         testImg = findViewById(R.id.testImg);
         spinner = findViewById(R.id.spinner);
         setSupportActionBar(toolbar);
@@ -69,67 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            try {
-                if(PermissionsManager.hasPermission(this, PermissionsManager.CAMERA)){
-                    startCameraActivity();
-                }else{
-                    PermissionsManager.requestPermissionIfNotGranted(MainActivity.this, this, PermissionsManager.CAMERA);
-                }
-            } catch(PermissionsManager.InvalidPermissionCodeException e){
-                System.out.println("Invalid permission code");
+            if(PermissionsManager.hasPermission(this, PermissionsManager.CAMERA)){
+                startCameraActivity();
+            }else{
+                PermissionsManager.requestPermissionIfNotGranted(MainActivity.this, this, PermissionsManager.CAMERA);
             }
         });
-
-        resultsList.addOnItemTouchListener(new RecyclerTouchListener(mainActivity, resultsList, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                ArrayList<Pair<RecyclerView, Integer>> rows = resultsListAdapter.getRows();
-                updateHighlighted(rows, position);
-                System.out.println("onClick: " + position);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                ArrayList<Pair<RecyclerView, Integer>> rows = resultsListAdapter.getRows();
-                updateHighlighted(rows, position);
-                Intent intent = new Intent(context, FinalBoardActivity.class);
-                String flatFinalBoard = "";
-                int[][] finalBoard = results.get(position).getFinalBoard();
-                System.out.println("Position pressed: " + position);
-                //System.out.println("Final board:");
-                for(int i = 0; i < 8; i++){
-                    for(int j = 0; j < 8; j++){
-                        //System.out.print(finalBoard[i][j] == -1 ? 1 : 0);
-                        flatFinalBoard += finalBoard[i][j] + " ";
-                    }
-                    //System.out.println();
-                }
-                //System.out.println(flatFinalBoard);
-                intent.putExtra("FLAT_FINAL_BOARD", flatFinalBoard);
-                context.startActivity(intent);
-            }
-        }));
-    }
-
-    private void updateHighlighted(ArrayList<Pair<RecyclerView, Integer>> rows, int position){
-        boolean[][] selected = new boolean[8][8];
-        Result result = results.get(position);
-        selected[result.r1][result.c1] = true;
-        selected[result.r2][result.c2] = true;
-        gridView.setAdapter(new ImageAdapter(context, grid, selected, gridView.getColumnWidth()));
-        for(int i = 0; i < rows.size(); i++){
-            if(rows.get(i).second%2 == 0){
-                rows.get(i).first.setBackgroundResource(R.color.boardDark);
-            }else{
-                rows.get(i).first.setBackgroundResource(R.color.boardLight);
-            }
-        }
-        RecyclerView resultRow = rows.get(position).first;
-        if(position%2 == 0) {
-            resultRow.setBackgroundResource(R.drawable.dark_border);
-        }else{
-            resultRow.setBackgroundResource(R.drawable.light_border);
-        }
     }
 
     private void startCameraActivity(){
@@ -185,10 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     boolean[][] selected = new boolean[8][8];
                     gridView.setAdapter(new ImageAdapter(context, grid, selected, gridView.getColumnWidth()));
                     gridView.invalidateViews();
-                    results = BoardUtils.getSortedResults(grid);
-                    resultsList.setLayoutManager(new LinearLayoutManager(context));
-                    resultsListAdapter = new ResultsListAdapter(context, results);
-                    resultsList.setAdapter(resultsListAdapter);
+                    resultsList.setResults(BoardUtils.getSortedResults(grid));
                     spinner.setVisibility(View.INVISIBLE);
                 });
             }catch (Exception e) {

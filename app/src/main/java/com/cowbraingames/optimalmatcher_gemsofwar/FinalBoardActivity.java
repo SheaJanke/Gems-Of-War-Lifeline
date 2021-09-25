@@ -1,21 +1,20 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsListAdapter;
 
 import java.util.ArrayList;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList;
 
 public class ResultPair {
     public final int numOrbs, orbType;

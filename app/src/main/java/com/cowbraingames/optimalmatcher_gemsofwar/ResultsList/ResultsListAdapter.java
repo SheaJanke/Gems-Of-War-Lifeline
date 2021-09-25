@@ -1,29 +1,19 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.gesture.Gesture;
-import android.graphics.Color;
-import android.os.Bundle;
 import android.util.Pair;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.R;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.ResultListViewHolder> {
 

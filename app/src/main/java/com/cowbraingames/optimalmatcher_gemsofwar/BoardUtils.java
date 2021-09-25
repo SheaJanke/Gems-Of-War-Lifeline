@@ -1,7 +1,8 @@
 package com.cowbraingames.optimalmatcher_gemsofwar;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BoardUtils {
     static final int BOARD_SIZE = 8;

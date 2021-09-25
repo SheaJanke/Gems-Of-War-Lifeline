@@ -22,18 +22,18 @@ public class PermissionsManager {
 
     public static void requestAllPermissions(Activity activity, Context context) {
         permissionMapping.keySet().forEach(permissionCode -> {
-            try {
-                requestPermissionIfNotGranted(activity, context, permissionCode);
-            } catch (InvalidPermissionCodeException e) {
-                System.out.println("Invalid permission code: " + permissionCode);
-            }
+            requestPermissionIfNotGranted(activity, context, permissionCode);
         });
     }
 
-    public static void requestPermissionIfNotGranted(Activity activity, Context context, int permissionCode) throws InvalidPermissionCodeException {
-        String permission = getPermissionFromCode(permissionCode);
-        if(!hasPermission(context, permission)){
-            requestPermission(activity, permissionCode, permission);
+    public static void requestPermissionIfNotGranted(Activity activity, Context context, int permissionCode) {
+        try {
+            String permission = getPermissionFromCode(permissionCode);
+            if(!hasPermission(context, permission)){
+                requestPermission(activity, permissionCode, permission);
+            }
+        } catch (InvalidPermissionCodeException e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,8 +52,13 @@ public class PermissionsManager {
         ActivityCompat.requestPermissions(activity, new String[]{ permission }, permissionCode);
     }
 
-    public static boolean hasPermission(Context context, int permissionCode) throws InvalidPermissionCodeException {
-        return hasPermission(context, getPermissionFromCode(permissionCode));
+    public static boolean hasPermission(Context context, int permissionCode) {
+        try {
+            return hasPermission(context, getPermissionFromCode(permissionCode));
+        } catch(InvalidPermissionCodeException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static class InvalidPermissionCodeException extends Exception {
