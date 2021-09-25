@@ -11,6 +11,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
@@ -39,9 +40,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CAMERA = 1;
     private static final int USE_CAMERA = 2;
-    private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
     private GridView gridView;
     private ArrayList<Result> results;
     private int[][] grid;
@@ -66,12 +65,18 @@ public class MainActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         setSupportActionBar(toolbar);
 
-        requestPermissions();
+        PermissionsManager.requestAllPermissions(MainActivity.this, this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            if(hasCameraPermissions()){
-                startCameraActivity();
+            try {
+                if(PermissionsManager.hasPermission(this, PermissionsManager.CAMERA)){
+                    startCameraActivity();
+                }else{
+                    PermissionsManager.requestPermissionIfNotGranted(MainActivity.this, this, PermissionsManager.CAMERA);
+                }
+            } catch(PermissionsManager.InvalidPermissionCodeException e){
+                System.out.println("Invalid permission code");
             }
         });
 
@@ -127,15 +132,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void requestPermissions(){
-        if(!hasCameraPermissions()){
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA);
-        }
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
-        }
-    }
-
     private void startCameraActivity(){
         String fileName = "boardImg.png";
         File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -150,10 +146,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean hasCameraPermissions(){
-        return ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
