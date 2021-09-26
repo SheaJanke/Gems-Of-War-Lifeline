@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.FinalBoardActivity;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.RecyclerTouchListener;
@@ -17,12 +18,14 @@ import java.util.ArrayList;
 public class ResultsList {
     private final Context context;
     private final RecyclerView resultsList;
+    private final BoardGrid boardGrid;
     private ResultsListAdapter resultsListAdapter;
     private ArrayList<Result> results;
 
-    public ResultsList(Context context, RecyclerView resultsList) {
+    public ResultsList(Context context, RecyclerView resultsList, BoardGrid boardGrid) {
         this.context = context;
         this.resultsList = resultsList;
+        this.boardGrid = boardGrid;
         setResults(new ArrayList<>());
         addClickListener();
     }
@@ -68,11 +71,8 @@ public class ResultsList {
     }
 
     private void updateHighlighted(ArrayList<Pair<RecyclerView, Integer>> rows, int position){
-        boolean[][] selected = new boolean[8][8];
         Result result = results.get(position);
-        selected[result.r1][result.c1] = true;
-        selected[result.r2][result.c2] = true;
-        //gridView.setAdapter(new ImageAdapter(context, grid, selected, gridView.getColumnWidth()));
+        boardGrid.setSelectedResult(result);
         for(int i = 0; i < rows.size(); i++){
             if(rows.get(i).second%2 == 0){
                 rows.get(i).first.setBackgroundResource(R.color.boardDark);

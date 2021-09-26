@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsListAdapter;
 
@@ -69,7 +70,7 @@ public class FinalBoardActivity extends AppCompatActivity {
 
     private void fillBoardAndResults() {
         boolean[][] selected = new boolean[8][8];
-        gridView.setAdapter(new ImageAdapter(context, finalBoard, selected, gridView.getColumnWidth()));
+        gridView.setAdapter(new BoardGridAdapter(context, finalBoard, selected, gridView.getColumnWidth()));
         gridView.invalidateViews();
         results = BoardUtils.getSortedResults(finalBoard);
         resultsList.setLayoutManager(new LinearLayoutManager(context));

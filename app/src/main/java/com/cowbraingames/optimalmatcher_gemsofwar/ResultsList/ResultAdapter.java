@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cowbraingames.optimalmatcher_gemsofwar.ImageAdapter;
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
             position--;
         }
         ResultPair pair = displayResults.get(position);
-        holder.orbType.setImageResource(ImageAdapter.orbID[pair.orbType]);
+        holder.orbType.setImageResource(BoardGridAdapter.orbID[pair.orbType]);
         holder.numOrbs.setText(String.valueOf(pair.numOrbs));
     }
 

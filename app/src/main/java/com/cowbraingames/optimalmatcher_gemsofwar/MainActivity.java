@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -21,9 +20,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
-import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -33,10 +32,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private static final int USE_CAMERA = 2;
-    private GridView gridView;
-    private int[][] grid;
+    private BoardGrid boardGrid;
     private ResultsList resultsList;
-    private ResultsListAdapter resultsListAdapter;
     private ImageView testImg;
     private Context context;
     private Activity mainActivity;
@@ -49,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         mainActivity = this;
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        gridView = findViewById(R.id.board);
-        resultsList = new ResultsList(context, findViewById(R.id.results_list));
+        boardGrid = new BoardGrid(context, findViewById(R.id.board));
+        resultsList = new ResultsList(context, findViewById(R.id.results_list), boardGrid);
         testImg = findViewById(R.id.testImg);
         spinner = findViewById(R.id.spinner);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         PermissionsManager.requestAllPermissions(MainActivity.this, this);
@@ -117,11 +114,9 @@ public class MainActivity extends AppCompatActivity {
                 BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
                 Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
                 runOnUiThread(() -> {
-                    grid = board.getGrid();
-                    boolean[][] selected = new boolean[8][8];
-                    gridView.setAdapter(new ImageAdapter(context, grid, selected, gridView.getColumnWidth()));
-                    gridView.invalidateViews();
-                    resultsList.setResults(BoardUtils.getSortedResults(grid));
+                    int[][] boardOrbs = board.getGrid();
+                    boardGrid.setBoardOrbs(boardOrbs);
+                    resultsList.setResults(BoardUtils.getSortedResults(boardOrbs));
                     spinner.setVisibility(View.INVISIBLE);
                 });
             }catch (Exception e) {

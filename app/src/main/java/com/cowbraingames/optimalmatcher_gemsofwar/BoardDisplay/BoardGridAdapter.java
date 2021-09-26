@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay;
 
 import android.content.Context;
 import android.view.View;
@@ -7,7 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-public class ImageAdapter extends BaseAdapter {
+import com.cowbraingames.optimalmatcher_gemsofwar.R;
+
+public class BoardGridAdapter extends BaseAdapter {
     private Context mContext;
     private int[][] grid;
     private boolean[][] selcted;
@@ -25,7 +27,7 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.lycanthropy
     };
 
-    public ImageAdapter(Context c, int[][] grid, boolean[][] selected, int imgSize){
+    public BoardGridAdapter(Context c, int[][] grid, boolean[][] selected, int imgSize){
         mContext = c;
         this.grid = grid;
         this.selcted = selected;
