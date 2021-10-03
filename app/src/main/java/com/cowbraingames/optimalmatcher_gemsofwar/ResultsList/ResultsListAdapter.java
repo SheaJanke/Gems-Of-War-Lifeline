@@ -37,20 +37,33 @@ public class ResultsListAdapter extends RecyclerView.Adapter<ResultsListAdapter.
         return new ResultListViewHolder(view);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ResultListViewHolder holder, final int position) {
         rows.add(Pair.create(holder.resultRow, position));
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ct);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        if(position%2 == 0){
-            holder.resultRow.setBackgroundColor(0xFF404040);
-        }else{
-            holder.resultRow.setBackgroundColor(0xFF696969);
-        }
+
+        holder.resultRow.setBackgroundResource(getRowBackground(position, false));
         holder.resultRow.setLayoutManager(linearLayoutManager);
         ResultAdapter resultAdapter = new ResultAdapter(ct, results.get(position));
         holder.resultRow.setAdapter(resultAdapter);
+    }
+
+    public void updateHighlightedRow(int highlightedPosition) {
+        for(int i = 0; i < rows.size(); i++){
+            int rowPosition = rows.get(i).second;
+            RecyclerView row = rows.get(i).first;
+            row.setBackgroundResource(getRowBackground(rowPosition, rowPosition == highlightedPosition));
+        }
+    }
+
+    private int getRowBackground(int position, boolean isHighlighted) {
+        if(position%2 == 0){
+            return isHighlighted ? R.drawable.dark_border : R.color.boardDark;
+        }else{
+            return isHighlighted ? R.drawable.light_border : R.color.boardLight;
+        }
     }
 
     @Override
