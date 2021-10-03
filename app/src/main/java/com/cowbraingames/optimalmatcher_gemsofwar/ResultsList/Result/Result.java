@@ -1,6 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList;
-
-import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultPair;
+package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
 
 import java.util.ArrayList;
 import java.util.Collections;

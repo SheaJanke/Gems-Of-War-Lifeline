@@ -14,7 +14,7 @@ import android.provider.MediaStore;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
-import com.cowbraingames.optimalmatcher_gemsofwar.MainActivity;
+import com.cowbraingames.optimalmatcher_gemsofwar.Activities.MainActivity;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 
 import java.io.File;

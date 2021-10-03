@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3f294bac-68ac-4155-a16b-adb55aebd085" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/Camera/CameraManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/Camera/CameraManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/FinalBoardActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/Activities/FinalBoardActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/Activities/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/ResultsList/ResultsList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cowbraingames/optimalmatcher_gemsofwar/ResultsList/ResultsList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/content_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/content_main.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="ProjectId" id="1z0RgooK0Dt6XQT7lvQcvbrpio3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3f294bac-68ac-4155-a16b-adb55aebd085" name="Default Changelist" comment="" />
+      <created>1633283132361</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1633283132361</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="-2139" y="307" key="FileChooserDialogImpl" timestamp="1633283144160">
+      <screen x="-2880" y="11" width="1920" height="1080" />
+    </state>
+    <state x="-2139" y="307" key="FileChooserDialogImpl/0.0.1280.720/-2880.11.1920.1080@-2880.11.1920.1080" timestamp="1633283144160" />
+  </component>
+</project>

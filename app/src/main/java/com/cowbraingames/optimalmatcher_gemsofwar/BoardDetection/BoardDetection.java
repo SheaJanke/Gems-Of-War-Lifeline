@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

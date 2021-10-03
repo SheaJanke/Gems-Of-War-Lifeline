@@ -3,7 +3,7 @@ package com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay;
 import android.content.Context;
 import android.widget.GridView;
 
-import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
 
 public class BoardGrid {
 

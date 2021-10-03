@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,8 +13,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
-import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
+import com.cowbraingames.optimalmatcher_gemsofwar.R;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsListAdapter;
 
 import java.util.ArrayList;

@@ -1,15 +1,10 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.Activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -17,16 +12,17 @@ import android.widget.ProgressBar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.Board;
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardDetection;
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.Camera.CameraManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
 import java.io.IOException;
 
 

@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar;
+package com.cowbraingames.optimalmatcher_gemsofwar.Utils;
 
 import android.content.Context;
 import android.view.GestureDetector;

@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList;
+package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
-import com.cowbraingames.optimalmatcher_gemsofwar.FinalBoardActivity;
+import com.cowbraingames.optimalmatcher_gemsofwar.Activities.FinalBoardActivity;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
-import com.cowbraingames.optimalmatcher_gemsofwar.RecyclerTouchListener;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.RecyclerTouchListener;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
 
 import java.util.ArrayList;
 

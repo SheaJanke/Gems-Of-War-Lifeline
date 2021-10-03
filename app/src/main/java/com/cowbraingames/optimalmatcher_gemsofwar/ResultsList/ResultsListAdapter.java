@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
+import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.ResultAdapter;
 
 import java.util.ArrayList;
 
