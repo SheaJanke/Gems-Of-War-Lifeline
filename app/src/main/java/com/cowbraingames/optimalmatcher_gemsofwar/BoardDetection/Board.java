@@ -8,6 +8,7 @@ import android.os.Environment;
 
 import androidx.annotation.RequiresApi;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.CloudStorage.CloudStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;
 
 import org.tensorflow.lite.DataType;
@@ -51,6 +52,12 @@ public class Board {
                     Bitmap img = orbs[i][j];
                     tImage.load(img);
                     tImage = imageResizer.process(tImage);
+
+                    // Test save image in cloud storage.
+                    if(i == 0 && j == 0) {
+                        CloudStorageManager.uploadReportedImage(tImage.getBitmap());
+                    }
+
                     tImage = imageNoramlizer.process(tImage);
                     // Creates inputs for reference.
                     TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);

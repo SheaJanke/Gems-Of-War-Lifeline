@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854717658135",
+    "project_id": "gow-lifeline",
+    "storage_bucket": "gow-lifeline.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854717658135:android:c0b60167a49026797a9852",
+        "android_client_info": {
+          "package_name": "com.cowbraingames.optimalmatcher_gemsofwar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854717658135-5d5h50oe0ki07hbf7odvnsm9skl2g9b9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyH5XVC2vLGoGfIhhAFUXtczb3FPAbxwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854717658135-5d5h50oe0ki07hbf7odvnsm9skl2g9b9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
