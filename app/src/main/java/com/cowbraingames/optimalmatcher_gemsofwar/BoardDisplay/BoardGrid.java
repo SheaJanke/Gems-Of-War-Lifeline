@@ -1,9 +1,12 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.RecyclerTouchListener;
 
 public class BoardGrid {
 
@@ -14,6 +17,7 @@ public class BoardGrid {
     public BoardGrid(Context context, GridView board) {
         this.context = context;
         this.board = board;
+        addClickListener();
     }
 
     public void setBoardOrbs(int[][] boardOrbs) {
@@ -35,5 +39,12 @@ public class BoardGrid {
     private void updateAdapter(boolean[][] selected) {
         board.setAdapter(new BoardGridAdapter(context, boardOrbs, selected, board.getColumnWidth()));
         board.invalidateViews();
+    }
+
+    private void addClickListener() {
+        board.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            System.out.println("clicked: " + i);
+            return false;
+        });
     }
 }

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Gems of War Lifeline</string>
     <string name="test">test</string>
+    <string name="report_dialog_title">Report Orb?</string>
+    <string name="report_dialog_description">If the orb you clicked is incorrect, please
+        report it to help improve the image classification in future app updates.
+    </string>
+    <string name="report_dialog_correct">Correct</string>
+    <string name="report_dialog_incorrect">Incorrect</string>
 </resources>
