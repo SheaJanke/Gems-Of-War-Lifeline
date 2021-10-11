@@ -8,12 +8,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 
 public class BoardGridAdapter extends BaseAdapter {
-    private Context mContext;
-    private int[][] grid;
-    private boolean[][] selcted;
-    private int imgSize;
+    private final Context context;
+    private final int[][] grid;
+    private final boolean[][] selected;
+    private final int imgSize;
+    private final int BOARD_SIZE = Constants.BOARD_SIZE;
     public static Integer[] orbID = {
             R.drawable.skull,
             R.drawable.super_skull,
@@ -33,16 +35,16 @@ public class BoardGridAdapter extends BaseAdapter {
             R.drawable.water_potion
     };
 
-    public BoardGridAdapter(Context c, int[][] grid, boolean[][] selected, int imgSize){
-        mContext = c;
+    public BoardGridAdapter(Context context, int[][] grid, boolean[][] selected, int imgSize){
+        this.context = context;
         this.grid = grid;
-        this.selcted = selected;
+        this.selected = selected;
         this.imgSize = imgSize;
     }
 
     @Override
     public int getCount() {
-        return 64;
+        return BOARD_SIZE * BOARD_SIZE;
     }
 
     @Override
@@ -56,24 +58,27 @@ public class BoardGridAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int position, View view, ViewGroup viewGroup) {
         ImageView imageView;
         if(view == null){
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(context);
             imageView.setLayoutParams(new GridView.LayoutParams(imgSize, imgSize));
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }else{
             imageView = (ImageView) view;
         }
-        if(i == -1){
-            return imageView;
-        }
-        if(selcted[i/8][i%8]){
+
+        setImageResource(imageView, position);
+
+        return imageView;
+    }
+
+    private void setImageResource(ImageView imageView, int position) {
+        if(selected[position/BOARD_SIZE][position%BOARD_SIZE]){
             imageView.setBackgroundResource(R.color.colorAccent);
         }
-        int orbType = grid[i/8][i%8];
+        int orbType = grid[position/BOARD_SIZE][position%BOARD_SIZE];
         imageView.setImageResource(orbType == -1 ? R.drawable.unknown : orbID[orbType]);
-        return imageView;
     }
 
 }
