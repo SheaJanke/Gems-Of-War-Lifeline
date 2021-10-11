@@ -1,8 +1,15 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
+import com.cowbraingames.optimalmatcher_gemsofwar.CloudStorage.CloudStorageManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;
 
@@ -81,6 +88,29 @@ public class MainActivityBoard extends Board{
 
     @Override
     public void reportOrb(int row, int col) {
-        System.out.println("report orb: " + row + " " + col);
+        final Dialog reportDialog = new Dialog(context);
+        reportDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        reportDialog.setCancelable(true);
+        reportDialog.setContentView(R.layout.report_dialog);
+
+        final ImageView image = reportDialog.findViewById(R.id.report_dialog_image);
+        final ImageView prediction = reportDialog.findViewById(R.id.report_dialog_prediction);
+        final Button correctButton = reportDialog.findViewById(R.id.report_dialog_correct_button);
+        final Button incorrectButton = reportDialog.findViewById(R.id.report_dialog_incorrect_button);
+
+        Bitmap orbBitmap = processedImages[row][col];
+        image.setImageBitmap(orbBitmap);
+
+        int predictedOrbType = orbTypes[row][col];
+        prediction.setImageResource(BoardGridAdapter.orbID[predictedOrbType]);
+
+        correctButton.setOnClickListener(view -> {
+            reportDialog.dismiss();
+        });
+        incorrectButton.setOnClickListener((view -> {
+            CloudStorageManager.uploadReportedImage(orbBitmap);
+            reportDialog.dismiss();
+        }));
+        reportDialog.show();
     }
 }

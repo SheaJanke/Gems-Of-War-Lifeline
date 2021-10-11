@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Result {
-    static final int ORB_TYPES = 10;
+    static final int ORB_TYPES = 16;
     private final int[] matchedOrbs;
     private int[][] finalBoard;
     private boolean extraTurn;
+    private boolean invalidFinalBoard;
     public final int r1, c1, r2, c2;
 
 
@@ -15,6 +16,7 @@ public class Result {
         matchedOrbs = new int[ORB_TYPES];
         this.finalBoard = finalBoard;
         extraTurn = false;
+        invalidFinalBoard = false;
         this.r1 = r1;
         this.c1 = c1;
         this.r2 = r2;
@@ -33,21 +35,6 @@ public class Result {
         return total;
     }
 
-    /*
-    public void setFinalBoard(int[][] finalBoard) {
-        int unknownOrbs = 0;
-        for(int i = 0; i < 8; i++)
-        {
-            for(int j = 0; j < 8; j++){
-                if(finalBoard[i][j] == -1){
-                    unknownOrbs++;
-                }
-                this.finalBoard[i][j] = finalBoard[i][j];
-            }
-        }
-        assert unknownOrbs == totalMatched();
-    }
-    */
 
     public int[][] getFinalBoard(){
         return finalBoard;
@@ -59,6 +46,14 @@ public class Result {
 
     public boolean getExtraTurn(){
         return extraTurn;
+    }
+
+    public void setInvalidFinalBoard(boolean invalidFinalBoard) {
+        this.invalidFinalBoard = invalidFinalBoard;
+    }
+
+    public boolean getInvalidFinalBoard() {
+        return invalidFinalBoard;
     }
 
     public ArrayList<ResultPair> getDisplayResults(){

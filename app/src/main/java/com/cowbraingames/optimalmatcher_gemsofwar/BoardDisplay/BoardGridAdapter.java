@@ -24,7 +24,13 @@ public class BoardGridAdapter extends BaseAdapter {
             R.drawable.light,
             R.drawable.dark,
             R.drawable.block,
-            R.drawable.lycanthropy
+            R.drawable.lycanthropy,
+            R.drawable.dark_potion,
+            R.drawable.earth_potion,
+            R.drawable.fire_potion,
+            R.drawable.ground_potion,
+            R.drawable.light_potion,
+            R.drawable.water_potion
     };
 
     public BoardGridAdapter(Context c, int[][] grid, boolean[][] selected, int imgSize){

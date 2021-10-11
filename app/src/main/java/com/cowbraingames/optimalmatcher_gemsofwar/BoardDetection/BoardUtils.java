@@ -1,12 +1,17 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class BoardUtils {
-    static final int BOARD_SIZE = 8;
-    static final int EMPTY = -1;
+    static final int BOARD_SIZE = Constants.BOARD_SIZE;
+    static final int UNKNOWN = -1;
     static final int SKULL = 0;
     static final int SUPER_SKULL = 1;
     static final int FIRE = 2;
@@ -17,16 +22,45 @@ public class BoardUtils {
     static final int DARK = 7;
     static final int BLOCK = 8;
     static final int LYCANTHROPY = 9;
+    static final int DARK_POTION = 10;
+    static final int EARTH_POTION = 11;
+    static final int FIRE_POTION = 12;
+    static final int GROUND_POTION = 13;
+    static final int LIGHT_POTION = 14;
+    static final int WATER_POTION = 15;
+
+    static final Map<Integer, Integer> matchGroup = new HashMap<Integer, Integer>() {{
+        put(SKULL, SKULL);
+        put(SUPER_SKULL, SKULL);
+        put(FIRE, FIRE);
+        put(WATER, WATER);
+        put(EARTH, EARTH);
+        put(GROUND, GROUND);
+        put(LIGHT, LIGHT);
+        put(DARK, DARK);
+        put(LYCANTHROPY, DARK);
+        put(DARK_POTION, DARK);
+        put(EARTH_POTION, EARTH);
+        put(FIRE_POTION, FIRE);
+        put(GROUND_POTION, GROUND);
+        put(LIGHT_POTION, LIGHT);
+        put(WATER_POTION, WATER);
+    }};
+
+    static final Set<Integer> createsInvalidFinalBoard = new HashSet<Integer>() {{
+        add(DARK_POTION);
+        add(EARTH_POTION);
+        add(FIRE_POTION);
+        add(GROUND_POTION);
+        add(LIGHT_POTION);
+        add(WATER_POTION);
+    }};
 
     private static boolean isMatching(int orbType1, int orbType2){
-        if(orbType1 == BLOCK || orbType2 == BLOCK || orbType1 == EMPTY || orbType2 == EMPTY){
+        if(orbType1 == BLOCK || orbType2 == BLOCK || orbType1 == UNKNOWN || orbType2 == UNKNOWN){
             return false;
         }
-        return orbType1 == orbType2 ||
-                (orbType1 == SKULL && orbType2 == SUPER_SKULL) ||
-                (orbType1 == SUPER_SKULL && orbType2 == SKULL) ||
-                (orbType1 == DARK && orbType2 == LYCANTHROPY) ||
-                (orbType1 == LYCANTHROPY && orbType2 == DARK);
+        return matchGroup.get(orbType1).equals(matchGroup.get(orbType2));
     }
 
     private static boolean canMove(int orbType){
@@ -47,10 +81,10 @@ public class BoardUtils {
         for(int j = 0; j < BOARD_SIZE; j++){
             int swapIndex = BOARD_SIZE-1;
             for(int i = BOARD_SIZE-1; i >= 0; i--){
-                if(board[i][j] != EMPTY){
+                if(board[i][j] != UNKNOWN){
                     if(swapIndex != i){
                         board[swapIndex][j] = board[i][j];
-                        board[i][j] = EMPTY;
+                        board[i][j] = UNKNOWN;
                     }
                     swapIndex--;
                 }
@@ -60,7 +94,7 @@ public class BoardUtils {
 
     private static void matchOrb(int[][] board, boolean[][] matched, int r, int c){
         // Check if out of bounds.
-        if(r < 0 || c < 0 || r >= BOARD_SIZE || c >= BOARD_SIZE || matched[r][c] || board[r][c] == EMPTY){
+        if(r < 0 || c < 0 || r >= BOARD_SIZE || c >= BOARD_SIZE || matched[r][c] || board[r][c] == UNKNOWN){
             return;
         }
         matched[r][c] = true;
@@ -111,9 +145,12 @@ public class BoardUtils {
         boolean wasMatch = false;
         for(int i = 0; i < BOARD_SIZE; i++){
             for(int j = 0; j < BOARD_SIZE; j++){
-                if(matched[i][j] && board[i][j] != EMPTY){
+                if(matched[i][j] && board[i][j] != UNKNOWN){
                     wasMatch = true;
                     result.addMatched(board[i][j]);
+                    if(createsInvalidFinalBoard.contains(board[i][j])){
+                        result.setInvalidFinalBoard(true);
+                    }
                     board[i][j] = -1;
                 }
             }
@@ -163,7 +200,13 @@ public class BoardUtils {
                     while (matchBoard(boardCopy, result)){
                         fillGaps(boardCopy);
                     }
-                    //result.setFinalBoard(boardCopy);
+                    if(result.getInvalidFinalBoard()){
+                        for(int row = 0; row < BOARD_SIZE; row++){
+                            for(int col = 0; col < BOARD_SIZE; col++){
+                                boardCopy[row][col] = UNKNOWN;
+                            }
+                        }
+                    }
                     if(result.totalMatched() > 0){
                         results.add(result);
                     }
@@ -177,7 +220,13 @@ public class BoardUtils {
                     while (matchBoard(boardCopy, result)){
                         fillGaps(boardCopy);
                     }
-                    //result.setFinalBoard(boardCopy);
+                    if(result.getInvalidFinalBoard()){
+                        for(int row = 0; row < BOARD_SIZE; row++){
+                            for(int col = 0; col < BOARD_SIZE; col++){
+                                boardCopy[row][col] = UNKNOWN;
+                            }
+                        }
+                    }
                     if(result.totalMatched() > 0){
                         results.add(result);
                     }
