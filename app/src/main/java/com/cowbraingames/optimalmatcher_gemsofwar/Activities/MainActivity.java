@@ -25,6 +25,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
 
@@ -96,9 +97,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case USE_CAMERA:
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
                     try {
-                        Bitmap boardBitmap = cameraManager.handleCameraResult(requestCode);
+                        Bitmap boardBitmap = cameraManager.handleCameraResult(requestCode, data);
                         updateBoardGrid(boardBitmap);
                     } catch (IOException e) {
                         e.printStackTrace();

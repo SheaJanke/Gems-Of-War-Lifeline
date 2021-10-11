@@ -11,11 +11,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.Activities.MainActivity;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.Storage.LocalStorageManager;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +45,20 @@ public class CameraManager {
     }
 
     private void startCameraActivity() {
+        if(LocalStorageManager.getAutoCropPreference(context)){
+            startAutoCropCameraActivity();
+        }else{
+            startCropCameraActivity();
+        }
+    }
+
+    private void startCropCameraActivity() {
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(activity);
+    }
+
+    private void startAutoCropCameraActivity() {
         File storageDirectory = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         try {
             File imageFile = new File(storageDirectory, FILE_NAME);
@@ -63,10 +81,24 @@ public class CameraManager {
         imagePath = savedInstanceState.getString("imagePath");
     }
 
-    public Bitmap handleCameraResult(int requestCode) throws IOException {
-        assert requestCode == MainActivity.USE_CAMERA;
+    public Bitmap handleCameraResult(int requestCode, @Nullable Intent data) throws IOException {
+        if(requestCode == MainActivity.USE_CAMERA){
+            return handleAutoCropCameraResult();
+        }
+        return handleCropCameraResult(data);
+    }
+
+    private Bitmap handleCropCameraResult(@Nullable Intent data) throws IOException {
+        CropImage.ActivityResult result = CropImage.getActivityResult(data);
+        assert result != null;
+        Uri imageUri = result.getUri();
+        return MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
+    }
+
+    private Bitmap handleAutoCropCameraResult() throws IOException {
         return getRotatedBoard();
     }
+
 
     private Bitmap getRotatedBoard() throws IOException {
         Bitmap boardBitmap = BitmapFactory.decodeFile(imagePath);
