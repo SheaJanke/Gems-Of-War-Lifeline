@@ -1,49 +1,50 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.Board;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
-import com.cowbraingames.optimalmatcher_gemsofwar.Utils.RecyclerTouchListener;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 
 public class BoardGrid {
 
     private final Context context;
-    private final GridView board;
-    private int[][] boardOrbs;
+    private final GridView grid;
+    private Board board;
 
-    public BoardGrid(Context context, GridView board) {
+    public BoardGrid(Context context, GridView grid) {
         this.context = context;
-        this.board = board;
+        this.grid = grid;
         addClickListener();
     }
 
-    public void setBoardOrbs(int[][] boardOrbs) {
-        this.boardOrbs = boardOrbs;
+    public void setBoard(Board board) {
+        this.board = board;
         setNoResultSelected();
     }
 
     private void setNoResultSelected() {
-        updateAdapter(new boolean[8][8]);
+        updateAdapter(new boolean[Constants.BOARD_SIZE][Constants.BOARD_SIZE]);
     }
 
     public void setSelectedResult(Result result) {
-        boolean[][] selected = new boolean[8][8];
+        boolean[][] selected = new boolean[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
         selected[result.r1][result.c1] = true;
         selected[result.r2][result.c2] = true;
         updateAdapter(selected);
     }
 
     private void updateAdapter(boolean[][] selected) {
-        board.setAdapter(new BoardGridAdapter(context, boardOrbs, selected, board.getColumnWidth()));
-        board.invalidateViews();
+        grid.setAdapter(new BoardGridAdapter(context, board.getOrbTypes(), selected, grid.getColumnWidth()));
+        grid.invalidateViews();
     }
 
     private void addClickListener() {
-        board.setOnItemLongClickListener((adapterView, view, i, l) -> {
-            System.out.println("clicked: " + i);
+        grid.setOnItemLongClickListener((adapterView, view, position, l) -> {
+            int row = position / Constants.BOARD_SIZE;
+            int col = position % Constants.BOARD_SIZE;
+            board.reportOrb(row, col);
             return false;
         });
     }

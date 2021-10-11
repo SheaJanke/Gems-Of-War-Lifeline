@@ -146,7 +146,7 @@ public class BoardDetection {
                 int squareDim = (int)(2.2*medianRadius);
                 Rect rectCrop = new Rect((int)averageCenter.x - squareDim/2, (int)averageCenter.y - squareDim/2, squareDim, squareDim);
                 Imgproc.rectangle(edges, rectCrop, new Scalar(255,255,255), 3);
-                orbs[i][j] = getCroppedBitmap(averageCenter, medianRadius);
+                orbs[j][i] = getCroppedBitmap(averageCenter, medianRadius);
             }
         }
         return true;

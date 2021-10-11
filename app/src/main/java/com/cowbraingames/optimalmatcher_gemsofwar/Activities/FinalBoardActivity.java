@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.FinalActivityBoard;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
@@ -66,7 +67,8 @@ public class FinalBoardActivity extends AppCompatActivity {
     }
 
     private void fillBoardAndResults() {
-        boardGrid.setBoardOrbs(finalBoard);
+        FinalActivityBoard board = new FinalActivityBoard(finalBoard);
+        boardGrid.setBoard(board);
         resultsList.setResults(BoardUtils.getSortedResults(finalBoard));
     }
 }

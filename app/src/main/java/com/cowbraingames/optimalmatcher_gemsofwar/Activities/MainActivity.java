@@ -13,9 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.Board;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardDetection;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
+import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.MainActivityBoard;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.Camera.CameraManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
@@ -92,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             try{
                 BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
-                Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
+                MainActivityBoard board = new MainActivityBoard(context, boardDetection.getOrbs());
+                // Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
                 runOnUiThread(() -> {
-                    int[][] boardOrbs = board.getGrid();
-                    boardGrid.setBoardOrbs(boardOrbs);
-                    resultsList.setResults(BoardUtils.getSortedResults(boardOrbs));
+                    boardGrid.setBoard(board);
+                    resultsList.setResults(BoardUtils.getSortedResults(board.getOrbTypes()));
                     spinner.setVisibility(View.INVISIBLE);
                 });
             }catch (Exception e) {
