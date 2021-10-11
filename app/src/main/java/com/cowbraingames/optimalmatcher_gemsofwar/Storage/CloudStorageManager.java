@@ -1,4 +1,4 @@
-package com.cowbraingames.optimalmatcher_gemsofwar.CloudStorage;
+package com.cowbraingames.optimalmatcher_gemsofwar.Storage;
 
 import android.graphics.Bitmap;
 

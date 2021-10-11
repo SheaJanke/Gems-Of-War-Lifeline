@@ -34,6 +34,14 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:label="@string/settings"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <provider
             android:authorities="com.cowbraingames.optimalmatcher_gemsofwar.fileprovider"
             android:name="androidx.core.content.FileProvider"

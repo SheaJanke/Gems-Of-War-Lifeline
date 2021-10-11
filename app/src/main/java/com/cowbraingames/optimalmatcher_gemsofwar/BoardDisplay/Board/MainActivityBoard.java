@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
-import com.cowbraingames.optimalmatcher_gemsofwar.CloudStorage.CloudStorageManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.Storage.CloudStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;

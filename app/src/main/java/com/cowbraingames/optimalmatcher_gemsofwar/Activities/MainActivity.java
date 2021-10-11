@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         final int itemId = item.getItemId();
         if(itemId == R.id.settings) {
-            System.out.println("Settings clicked");
+            Intent intent = new Intent(context, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
