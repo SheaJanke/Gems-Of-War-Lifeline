@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Result {
-    static final int ORB_TYPES = 16;
+    static final int ORB_TYPES = 17;
     private final int[] matchedOrbs;
-    private int[][] finalBoard;
+    private final int[][] finalBoard;
     private boolean extraTurn;
     private boolean invalidFinalBoard;
     public final int r1, c1, r2, c2;
@@ -63,10 +63,10 @@ public class Result {
                 displayResults.add(new ResultPair(matchedOrbs[i], i));
             }
         }
-        Collections.sort(displayResults, (r1, r2) -> {
-            if(r1.numOrbs != r2.numOrbs){
+        displayResults.sort((r1, r2) -> {
+            if (r1.numOrbs != r2.numOrbs) {
                 return r2.numOrbs - r1.numOrbs;
-            }else{
+            } else {
                 return r1.orbType - r2.orbType;
             }
         });

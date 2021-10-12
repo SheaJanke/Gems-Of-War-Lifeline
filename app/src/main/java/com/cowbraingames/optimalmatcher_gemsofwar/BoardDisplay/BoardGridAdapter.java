@@ -32,7 +32,8 @@ public class BoardGridAdapter extends BaseAdapter {
             R.drawable.fire_potion,
             R.drawable.ground_potion,
             R.drawable.light_potion,
-            R.drawable.water_potion
+            R.drawable.water_potion,
+            R.drawable.uber_doom_skull,
     };
 
     public BoardGridAdapter(Context context, int[][] grid, boolean[][] selected, int imgSize){

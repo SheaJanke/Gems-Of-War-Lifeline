@@ -28,6 +28,7 @@ public class BoardUtils {
     static final int GROUND_POTION = 13;
     static final int LIGHT_POTION = 14;
     static final int WATER_POTION = 15;
+    static final int UBER_DOOM_SKULL = 16;
 
     static final Map<Integer, Integer> matchGroup = new HashMap<Integer, Integer>() {{
         put(SKULL, SKULL);
@@ -45,6 +46,7 @@ public class BoardUtils {
         put(GROUND_POTION, GROUND);
         put(LIGHT_POTION, LIGHT);
         put(WATER_POTION, WATER);
+        put(UBER_DOOM_SKULL, SKULL);
     }};
 
     static final Set<Integer> createsInvalidFinalBoard = new HashSet<Integer>() {{
@@ -103,13 +105,23 @@ public class BoardUtils {
     private static void explodeOrb(int[][] board, boolean[][] matched, boolean[][] exploded, int r, int c){
         matchOrb(board, matched, r, c);
         // Check if out of bounds.
-        if(r < 0 || c < 0 || r >= BOARD_SIZE || c >= BOARD_SIZE || exploded[r][c] || board[r][c] != SUPER_SKULL){
+        if(r < 0 || c < 0 || r >= BOARD_SIZE || c >= BOARD_SIZE || exploded[r][c] || (board[r][c] != SUPER_SKULL && board[r][c] != UBER_DOOM_SKULL)){
             return;
         }
         exploded[r][c] = true;
-        for(int i = r-1; i <= r+1; i++){
-            for(int j = c-1; j <= c+1; j++){
-                explodeOrb(board, matched, exploded, i, j);
+        if(board[r][c] == SUPER_SKULL) {
+            for(int i = r-1; i <= r+1; i++){
+                for(int j = c-1; j <= c+1; j++){
+                    explodeOrb(board, matched, exploded, i, j);
+                }
+            }
+        }else if(board[r][c] == UBER_DOOM_SKULL) {
+            for(int i = -2; i <= 2; i++) {
+                for(int j = -2; j <= 2; j++){
+                    if(!(Math.abs(i) == Math.abs(j) && Math.abs(i) == 2)){
+                        explodeOrb(board, matched, exploded, r+i, c+j);
+                    }
+                }
             }
         }
     }
