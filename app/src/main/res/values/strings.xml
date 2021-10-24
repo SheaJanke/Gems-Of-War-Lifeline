@@ -16,5 +16,6 @@
     <string name="tutorial_2_text">The board will be detected from the picture, and a list of all the possible moves will be displayed. The moves
     that result in an extra turn will be at the top, followed by the moves that match the most orbs.</string>
     <string name="tutorial_next">Next</string>
+    <string name="tutorial_finish">Finish</string>
     <string name="tutorial_skip">Skip</string>
 </resources>

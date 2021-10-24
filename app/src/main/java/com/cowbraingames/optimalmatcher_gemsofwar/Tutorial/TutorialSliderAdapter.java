@@ -13,9 +13,10 @@ import com.cowbraingames.optimalmatcher_gemsofwar.R;
 
 public class TutorialSliderAdapter extends RecyclerView.Adapter<TutorialSliderAdapter.TutorialViewHolder> {
 
-    int[] headers = {R.string.tutorial_1_title, R.string.tutorial_1_title, R.string.tutorial_1_title};
-    int[] descriptions = {R.string.tutorial_1_text, R.string.tutorial_1_text, R.string.tutorial_1_text};
-    int[] images = {R.drawable.tutorial_image_1, R.drawable.tutorial_image_2, R.drawable.tutorial_image_3};
+    public static final int NUM_TUTORIAL_SCREENS = 3;
+    private final int[] headers = {R.string.tutorial_1_title, R.string.tutorial_1_title, R.string.tutorial_1_title};
+    private final int[] descriptions = {R.string.tutorial_1_text, R.string.tutorial_1_text, R.string.tutorial_1_text};
+    private final int[] images = {R.drawable.tutorial_image_1, R.drawable.tutorial_image_2, R.drawable.tutorial_image_3};
 
     public TutorialSliderAdapter() {
 
@@ -38,7 +39,7 @@ public class TutorialSliderAdapter extends RecyclerView.Adapter<TutorialSliderAd
 
     @Override
     public int getItemCount() {
-        return 3;
+        return NUM_TUTORIAL_SCREENS;
     }
 
     public class TutorialViewHolder extends RecyclerView.ViewHolder {
