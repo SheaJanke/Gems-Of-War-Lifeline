@@ -24,7 +24,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Camera.CameraManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
-import com.cowbraingames.optimalmatcher_gemsofwar.Tutorial.TutorialManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.Storage.LocalStorageManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -60,6 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> cameraManager.handleCameraButtonClicked());
+        startTutorialIfRequired();
+    }
+
+    private void startTutorialIfRequired() {
+        boolean tutorialCompleted = LocalStorageManager.getTutorialCompleted(context);
+        if(!tutorialCompleted) {
+            startTutorial();
+        }
+    }
+
+    private void startTutorial() {
+        LocalStorageManager.setTutorialCompleted(context, true);
+        Intent intent = new Intent(context, TutorialActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -78,8 +92,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }else if(itemId == R.id.tutorial) {
-            Intent intent = new Intent(context, TutorialActivity.class);
-            startActivity(intent);
+            startTutorial();
             return true;
         }
         return super.onOptionsItemSelected(item);
