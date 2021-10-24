@@ -78,9 +78,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }else if(itemId == R.id.tutorial) {
-            TutorialManager tutorialManager = new TutorialManager(context);
-            tutorialManager.startTutorial();
-            System.out.println("Here");
+            Intent intent = new Intent(context, TutorialActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
