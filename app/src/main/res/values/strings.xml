@@ -10,4 +10,11 @@
     <string name="settings">Settings</string>
     <string name="settings_autocrop">Auto-crop images</string>
     <string name="menu_tutorial">Tutorial</string>
+    <string name="tutorial_1_title">Step 1: Take a Picture</string>
+    <string name="tutorial_1_text">To get started, take a picture of the board. To get the most reliable results, the board should cover most of the picture.</string>
+    <string name="tutorial_2_title">2. View the Results</string>
+    <string name="tutorial_2_text">The board will be detected from the picture, and a list of all the possible moves will be displayed. The moves
+    that result in an extra turn will be at the top, followed by the moves that match the most orbs.</string>
+    <string name="tutorial_next">Next</string>
+    <string name="tutorial_skip">Skip</string>
 </resources>

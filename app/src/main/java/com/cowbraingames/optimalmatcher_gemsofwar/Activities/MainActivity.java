@@ -24,6 +24,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Camera.CameraManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
+import com.cowbraingames.optimalmatcher_gemsofwar.Tutorial.TutorialManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -75,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
         if(itemId == R.id.settings) {
             Intent intent = new Intent(context, SettingsActivity.class);
             startActivity(intent);
+            return true;
+        }else if(itemId == R.id.tutorial) {
+            TutorialManager tutorialManager = new TutorialManager(context);
+            tutorialManager.startTutorial();
+            System.out.println("Here");
             return true;
         }
         return super.onOptionsItemSelected(item);
