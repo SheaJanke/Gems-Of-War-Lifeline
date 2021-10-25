@@ -10,12 +10,15 @@
     <string name="settings">Settings</string>
     <string name="settings_autocrop">Auto-crop images</string>
     <string name="menu_tutorial">Tutorial</string>
-    <string name="tutorial_1_title">Step 1: Take a Picture</string>
-    <string name="tutorial_1_text">To get started, take a picture of the board. To get the most reliable results, the board should cover most of the picture.</string>
-    <string name="tutorial_2_title">2. View the Results</string>
-    <string name="tutorial_2_text">The board will be detected from the picture, and a list of all the possible moves will be displayed. The moves
-    that result in an extra turn will be at the top, followed by the moves that match the most orbs.</string>
-    <string name="tutorial_next">Next</string>
+    <string name="tutorial_1_title">Step 1: Take Picture</string>
+    <string name="tutorial_1_text">To get started, take a picture of the board using the in-app camera. To get the most reliable results, zoom into the board and don\'t include the characters in the picture.</string>
+    <string name="tutorial_2_title">Step 2: View Possible Moves</string>
+    <string name="tutorial_2_text">A list of all the possible moves will be displayed. If you click one of the possible moves, the swapped gems will be highlighted in pink.</string>
+    <string name="tutorial_3_title">Step 3: View Next Board</string>
+    <string name="tutorial_3_text">If you hold down one of the possible moves, the next board and possible moves will be shown. The gems from skyfall are unknown and will be displayed with a question mark.</string>
+    <string name="tutorial_4_title">Tip 1: Turn Off Auto-Crop</string>
+    <string name="tutorial_4_text">If you are having trouble getting the app to recognize the board, try turning off auto-crop in the settings. Crop the image close around the board (excluding the characters) for the most reliable results.</string>
+    <string name="tutorial_5_title">Tip 2: Report Incorrect Gems</string>
+    <string name="tutorial_5_text">If the app incorrectly identifies one or more gems, you can report the mistake by pressing and holding the incorrect gem. This will help improve the gem classification in future updates and is greatly appreciated.</string>
     <string name="tutorial_finish">Finish</string>
-    <string name="tutorial_skip">Skip</string>
 </resources>

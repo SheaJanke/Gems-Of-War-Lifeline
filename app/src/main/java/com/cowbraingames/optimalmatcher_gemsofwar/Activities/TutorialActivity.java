@@ -3,6 +3,7 @@ package com.cowbraingames.optimalmatcher_gemsofwar.Activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.Tutorial.TutorialSliderAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class TutorialActivity extends AppCompatActivity {
 
@@ -19,7 +21,8 @@ public class TutorialActivity extends AppCompatActivity {
     private TextView[] dots;
     private LinearLayout dotsLayout;
     private ViewPager2 tutorialSlider;
-    private Button nextButton, skipButton;
+    private Button finishButton;
+    private FloatingActionButton exitButton;
     private Context context;
     private int currentPage = 0;
 
@@ -31,8 +34,8 @@ public class TutorialActivity extends AppCompatActivity {
 
         tutorialSlider = findViewById(R.id.tutorial_slider);
         dotsLayout = findViewById(R.id.dots_layout);
-        nextButton = findViewById(R.id.tutorial_next);
-        skipButton = findViewById(R.id.tutorial_skip);
+        finishButton = findViewById(R.id.tutorial_finish);
+        exitButton = findViewById(R.id.tutorial_exit);
 
         TutorialSliderAdapter tutorialSliderAdapter = new TutorialSliderAdapter();
         tutorialSlider.setAdapter(tutorialSliderAdapter);
@@ -58,24 +61,24 @@ public class TutorialActivity extends AppCompatActivity {
 
     private void resetDisplay() {
         resetHighlightedDot();
-        resetNavigationText();
+        resetNavigationVisibility();
     }
 
     private void resetHighlightedDot() {
         for(int i = 0; i < NUM_TUTORIAL_SCREENS; i++){
             if(i == currentPage) {
-                dots[i].setTextColor(getColor(R.color.colorPrimaryDark));
+                dots[i].setTextColor(getColor(R.color.colorAccent));
             }else{
-                dots[i].setTextColor(getColor(R.color.white));
+                dots[i].setTextColor(getColor(R.color.colorPrimaryDark));
             }
         }
     }
 
-    private void resetNavigationText() {
+    private void resetNavigationVisibility() {
         if(isLastPage()){
-            nextButton.setText(R.string.tutorial_finish);
+            finishButton.setVisibility(View.VISIBLE);
         }else{
-            nextButton.setText(R.string.tutorial_next);
+            finishButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -91,15 +94,8 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     private void addNavigationClickListeners() {
-        nextButton.setOnClickListener(view -> {
-            if(isLastPage()){
-                finish();
-            }else{
-                tutorialSlider.setCurrentItem(currentPage + 1);
-            }
-        });
-
-        skipButton.setOnClickListener(view -> finish());
+        finishButton.setOnClickListener(view -> finish());
+        exitButton.setOnClickListener(view -> finish());
     }
 
     private boolean isLastPage() {

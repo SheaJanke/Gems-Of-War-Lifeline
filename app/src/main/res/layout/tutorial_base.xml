@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/tutorial_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/tutorial_slider"
         android:layout_width="0dp"
@@ -26,27 +38,15 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/tutorial_skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_button"
-            android:text="@string/tutorial_skip"
-            android:textColor="@color/cardview_light_background"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/tutorial_next"
+            android:id="@+id/tutorial_finish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_button"
-            android:text="@string/tutorial_next"
+            android:text="@string/tutorial_finish"
             android:textColor="@color/cardview_light_background"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
