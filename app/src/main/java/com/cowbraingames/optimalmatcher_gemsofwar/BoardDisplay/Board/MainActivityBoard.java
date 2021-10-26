@@ -12,6 +12,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Storage.CloudStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.common.ops.NormalizeOp;
@@ -95,8 +96,8 @@ public class MainActivityBoard extends Board{
 
         final ImageView image = reportDialog.findViewById(R.id.report_dialog_image);
         final ImageView prediction = reportDialog.findViewById(R.id.report_dialog_prediction);
-        final Button correctButton = reportDialog.findViewById(R.id.report_dialog_correct_button);
-        final Button incorrectButton = reportDialog.findViewById(R.id.report_dialog_incorrect_button);
+        final Button reportButton = reportDialog.findViewById(R.id.report_button);
+        final FloatingActionButton reportExit = reportDialog.findViewById(R.id.report_exit);
 
         Bitmap orbBitmap = processedImages[row][col];
         image.setImageBitmap(orbBitmap);
@@ -104,13 +105,12 @@ public class MainActivityBoard extends Board{
         int predictedOrbType = orbTypes[row][col];
         prediction.setImageResource(BoardGridAdapter.orbID[predictedOrbType]);
 
-        correctButton.setOnClickListener(view -> {
-            reportDialog.dismiss();
-        });
-        incorrectButton.setOnClickListener((view -> {
+        reportButton.setOnClickListener((view -> {
             CloudStorageManager.uploadReportedImage(orbBitmap);
             reportDialog.dismiss();
         }));
+
+        reportExit.setOnClickListener(view -> reportDialog.dismiss());
         reportDialog.show();
     }
 }
