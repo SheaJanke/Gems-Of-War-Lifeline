@@ -135,10 +135,9 @@ public class MainActivity extends AppCompatActivity {
             try{
                 BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
                 MainActivityBoard board = new MainActivityBoard(context, boardDetection.getOrbs());
-                // Board board = new Board(getApplicationContext(), boardDetection.getOrbs());
                 runOnUiThread(() -> {
                     boardGrid.setBoard(board);
-                    resultsList.setResults(BoardUtils.getSortedResults(board.getOrbTypes()));
+                    resultsList.setResults(BoardUtils.getSortedResults(board.getGemTypes()));
                     spinner.setVisibility(View.INVISIBLE);
                 });
             }catch (Exception e) {

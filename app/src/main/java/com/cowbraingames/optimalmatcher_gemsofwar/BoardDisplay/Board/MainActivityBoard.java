@@ -11,6 +11,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
 import com.cowbraingames.optimalmatcher_gemsofwar.Storage.CloudStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,13 +28,13 @@ public class MainActivityBoard extends Board{
     private final Context context;
     private final Bitmap[][] unprocessedImages;
     private final Bitmap[][] processedImages;
-    private final int[][] orbTypes;
+    private final GemType[][] gemTypes;
 
     public MainActivityBoard(Context context, Bitmap[][] unprocessedImages) {
         this.context = context;
         this.unprocessedImages = unprocessedImages;
         processedImages = new Bitmap[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
-        orbTypes = new int[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
+        gemTypes = new GemType[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
         predictEachSquare();
     }
 
@@ -71,7 +72,7 @@ public class MainActivityBoard extends Board{
                             maxVal = results[k];
                         }
                     }
-                    orbTypes[i][j] = maxIndex;
+                    gemTypes[i][j] = Constants.boardDetectionLabels[maxIndex];
                 }
             }
             // Releases model resources if no longer used.
@@ -83,8 +84,8 @@ public class MainActivityBoard extends Board{
     }
 
     @Override
-    public int[][] getOrbTypes() {
-        return orbTypes;
+    public GemType[][] getGemTypes() {
+        return gemTypes;
     }
 
     @Override
@@ -102,8 +103,8 @@ public class MainActivityBoard extends Board{
         Bitmap orbBitmap = processedImages[row][col];
         image.setImageBitmap(orbBitmap);
 
-        int predictedOrbType = orbTypes[row][col];
-        prediction.setImageResource(BoardGridAdapter.orbID[predictedOrbType]);
+        GemType predictedOrbType = gemTypes[row][col];
+        prediction.setImageResource(Constants.getResource(predictedOrbType));
 
         reportButton.setOnClickListener((view -> {
             CloudStorageManager.uploadReportedImage(orbBitmap);

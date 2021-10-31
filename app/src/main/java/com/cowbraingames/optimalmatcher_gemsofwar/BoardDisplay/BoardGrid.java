@@ -36,7 +36,7 @@ public class BoardGrid {
     }
 
     private void updateAdapter(boolean[][] selected) {
-        grid.setAdapter(new BoardGridAdapter(context, board.getOrbTypes(), selected, grid.getColumnWidth()));
+        grid.setAdapter(new BoardGridAdapter(context, board.getGemTypes(), selected, grid.getColumnWidth()));
         grid.invalidateViews();
     }
 

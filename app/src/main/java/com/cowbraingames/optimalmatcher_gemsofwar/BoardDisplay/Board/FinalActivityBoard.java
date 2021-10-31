@@ -1,14 +1,16 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board;
 
-public class FinalActivityBoard extends Board {
-    private final int[][] orbTypes;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
-    public FinalActivityBoard(int[][] orbTypes){
+public class FinalActivityBoard extends Board {
+    private final GemType[][] orbTypes;
+
+    public FinalActivityBoard(GemType[][] orbTypes){
         this.orbTypes = orbTypes;
     }
 
     @Override
-    public int[][] getOrbTypes() {
+    public GemType[][] getGemTypes() {
         return orbTypes;
     }
 

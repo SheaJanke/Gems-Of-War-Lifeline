@@ -9,10 +9,11 @@ import android.widget.ImageView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
 public class BoardGridAdapter extends BaseAdapter {
     private final Context context;
-    private final int[][] grid;
+    private final GemType[][] gems;
     private final boolean[][] selected;
     private final int imgSize;
     private final int BOARD_SIZE = Constants.BOARD_SIZE;
@@ -36,9 +37,9 @@ public class BoardGridAdapter extends BaseAdapter {
             R.drawable.uber_doom_skull,
     };
 
-    public BoardGridAdapter(Context context, int[][] grid, boolean[][] selected, int imgSize){
+    public BoardGridAdapter(Context context, GemType[][] gems, boolean[][] selected, int imgSize){
         this.context = context;
-        this.grid = grid;
+        this.gems = gems;
         this.selected = selected;
         this.imgSize = imgSize;
     }
@@ -78,8 +79,8 @@ public class BoardGridAdapter extends BaseAdapter {
         if(selected[position/BOARD_SIZE][position%BOARD_SIZE]){
             imageView.setBackgroundResource(R.color.colorAccent);
         }
-        int orbType = grid[position/BOARD_SIZE][position%BOARD_SIZE];
-        imageView.setImageResource(orbType == -1 ? R.drawable.unknown : orbID[orbType]);
+        GemType gemType = gems[position/BOARD_SIZE][position%BOARD_SIZE];
+        imageView.setImageResource(Constants.getResource(gemType));
     }
 
 }

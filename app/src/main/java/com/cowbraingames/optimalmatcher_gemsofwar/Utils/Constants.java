@@ -31,6 +31,30 @@ public class Constants {
        put(GemType.WILD_X4, R.drawable.wild_4);
     }};
 
+    public static final GemType[] boardDetectionLabels = {
+            GemType.SKULL,
+            GemType.SUPER_SKULL,
+            GemType.FIRE,
+            GemType.WATER,
+            GemType.EARTH,
+            GemType.GROUND,
+            GemType.LIGHT,
+            GemType.DARK,
+            GemType.BLOCK,
+            GemType.LYCANTHROPY,
+            GemType.DARK_POTION,
+            GemType.EARTH_POTION,
+            GemType.FIRE_POTION,
+            GemType.GROUND_POTION,
+            GemType.LIGHT_POTION,
+            GemType.WATER_POTION,
+            GemType.UBER_DOOM_SKULL,
+            GemType.WILD_X2,
+            GemType.WILD_X3,
+            GemType.WILD_X4
+    };
+
+
     public static int getResource(GemType gemType) {
         return gemResource.get(gemType);
     }

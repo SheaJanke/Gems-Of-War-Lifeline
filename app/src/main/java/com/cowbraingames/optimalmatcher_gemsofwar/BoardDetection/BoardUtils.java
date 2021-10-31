@@ -122,6 +122,13 @@ public class BoardUtils {
         while(matchBoard(gemBoard, result)){
             fillGaps(gemBoard);
         }
+        GemType finalBoard[][] = new GemType[BOARD_SIZE][BOARD_SIZE];
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j< BOARD_SIZE; j++){
+                finalBoard[i][j] = gemBoard[i][j].getDisplayGemType();
+            }
+        }
+        result.setFinalBoard(finalBoard);
         return result;
     }
 
@@ -237,7 +244,7 @@ public class BoardUtils {
         for(int j = 0; j < BOARD_SIZE; j++){
             int swapIndex = BOARD_SIZE-1;
             for(int i = BOARD_SIZE-1; i >= 0; i--){
-                if(board[i][j] instanceof Unknown_Gem){
+                if(!(board[i][j] instanceof Unknown_Gem)){
                     if(swapIndex != i){
                         Gem temp = board[swapIndex][j];
                         board[swapIndex][j] = board[i][j];

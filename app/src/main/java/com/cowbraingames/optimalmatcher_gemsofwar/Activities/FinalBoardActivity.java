@@ -14,6 +14,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.FinalActivi
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class FinalBoardActivity extends AppCompatActivity {
     public static String FINAL_BOARD_KEY = "FINAL_BOARD";
     private BoardGrid boardGrid;
     private ResultsList resultsList;
-    private int[][] finalBoard;
+    private GemType[][] finalBoard;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
@@ -55,7 +56,7 @@ public class FinalBoardActivity extends AppCompatActivity {
     void getFinalBoardFromBundle() {
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
-        finalBoard = (int[][]) bundle.getSerializable(FINAL_BOARD_KEY);
+        finalBoard = (GemType[][]) bundle.getSerializable(FINAL_BOARD_KEY);
     }
 
     void setupToolbar() {

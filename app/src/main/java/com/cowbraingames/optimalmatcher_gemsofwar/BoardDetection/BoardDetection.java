@@ -7,6 +7,8 @@ import android.util.Pair;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
+
 import org.checkerframework.checker.units.qual.A;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -43,7 +45,6 @@ public class BoardDetection {
         detectCircles();
         Bitmap img = matToBitmap(edges);
         mainActivity.runOnUiThread(() -> testImg.setImageBitmap(img));
-
     }
 
     private void detectEdges(){

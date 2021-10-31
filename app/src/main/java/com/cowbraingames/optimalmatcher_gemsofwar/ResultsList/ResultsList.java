@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.Activities.FinalBoardActivity;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.RecyclerTouchListener;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
 
@@ -48,13 +49,13 @@ public class ResultsList {
             @Override
             public void onLongClick(View view, int position) {
                 updateHighlightedRow(position);
-                int[][] finalBoard = results.get(position).getFinalBoard();
+                GemType[][] finalBoard = results.get(position).getFinalBoard();
                 startFinalBoardActivity(finalBoard);
             }
         }));
     }
 
-    private void startFinalBoardActivity(int[][] finalBoard) {
+    private void startFinalBoardActivity(GemType[][] finalBoard) {
         Intent intent = new Intent(context, FinalBoardActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(FinalBoardActivity.FINAL_BOARD_KEY, finalBoard);
