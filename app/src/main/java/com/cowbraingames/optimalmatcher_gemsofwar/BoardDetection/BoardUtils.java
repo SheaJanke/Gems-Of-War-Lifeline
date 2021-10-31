@@ -29,6 +29,9 @@ public class BoardUtils {
     static final int LIGHT_POTION = 14;
     static final int WATER_POTION = 15;
     static final int UBER_DOOM_SKULL = 16;
+    static final int WILD_2 = 17;
+    static final int WILD_3 = 18;
+    static final int WILD_4 = 19;
 
     static final Map<Integer, Integer> matchGroup = new HashMap<Integer, Integer>() {{
         put(SKULL, SKULL);
@@ -47,6 +50,27 @@ public class BoardUtils {
         put(LIGHT_POTION, LIGHT);
         put(WATER_POTION, WATER);
         put(UBER_DOOM_SKULL, SKULL);
+        put(WILD_2, WILD_2);
+        put(WILD_3, WILD_3);
+        put(WILD_4, WILD_4);
+    }};
+
+    static final Set<Integer> wildGems = new HashSet<Integer>() {{
+        add(WILD_2);
+        add(WILD_3);
+        add(WILD_4);
+    }};
+
+    static final Set<Integer> matchesWildGems = new HashSet<Integer>() {{
+        add(FIRE);
+        add(WATER);
+        add(LIGHT);
+        add(DARK);
+        add(EARTH);
+        add(GROUND);
+        add(WILD_2);
+        add(WILD_3);
+        add(WILD_4);
     }};
 
     static final Set<Integer> createsInvalidFinalBoard = new HashSet<Integer>() {{
@@ -58,11 +82,22 @@ public class BoardUtils {
         add(WATER_POTION);
     }};
 
-    private static boolean isMatching(int orbType1, int orbType2){
-        if(orbType1 == BLOCK || orbType2 == BLOCK || orbType1 == UNKNOWN || orbType2 == UNKNOWN){
+    private static boolean isWild(int gemType) {
+        return wildGems.contains(gemType);
+    }
+
+    private static boolean matchesWild(int gemType) {
+        return matchesWildGems.contains(gemType);
+    }
+
+    private static boolean isMatching(int gemType1, int gemType2){
+        if(gemType1 == BLOCK || gemType2 == BLOCK || gemType1 == UNKNOWN || gemType2 == UNKNOWN){
             return false;
         }
-        return matchGroup.get(orbType1).equals(matchGroup.get(orbType2));
+        if((isWild(gemType1) && matchesWild(gemType2)) || (isWild(gemType2) && matchesWild(gemType1))){
+            return true;
+        }
+        return matchGroup.get(gemType1).equals(matchGroup.get(gemType2));
     }
 
     private static boolean canMove(int orbType){
