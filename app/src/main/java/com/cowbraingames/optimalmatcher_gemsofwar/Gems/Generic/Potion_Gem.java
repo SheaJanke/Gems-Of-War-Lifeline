@@ -21,4 +21,9 @@ public abstract class Potion_Gem extends Gem {
     public boolean canBeMultiplied() {
         return false;
     }
+
+    @Override
+    public boolean createsInvalidFinalBoard() {
+        return true;
+    }
 }

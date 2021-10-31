@@ -33,13 +33,13 @@ public class Uber_Doom_Skull_Gem extends Gem {
         addResult.put(GemType.UBER_DOOM_SKULL, 1);
         for(int i = -2; i <= 2; i++){
             for(int j = -2; j <= 2; j++){
-                int newR = r + i;
-                int newC = c + j;
-                if(Math.abs(newR) == Math.abs(newC)){
+                if((Math.abs(i) == Math.abs(j)) && Math.abs(i) == 2){
                     continue;
                 }
+                int newR = r + i;
+                int newC = c + j;
                 if(newR >= 0 && newR< Constants.BOARD_SIZE && newC >= 0 && newC < Constants.BOARD_SIZE){
-                    board[r+i][c+j].explode(board, r+i, c+j);
+                    board[newR][newC].explode(board, newR, newC);
                 }
             }
         }

@@ -1,289 +1,69 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Generic.Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Dark_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Earth_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Fire_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Ground_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Light_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Water_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Block_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Lycanthropy_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Unknown_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Dark_Potion_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Earth_Potion_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Fire_Potion_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Light_Potion_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Water_Potion_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Skull.Skull_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Skull.Super_Skull_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Skull.Uber_Doom_Skull_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Wild.Wild_X2_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Wild.Wild_X3_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Wild.Wild_X4_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.MatchType;
 
+import org.checkerframework.checker.units.qual.A;
+import org.opencv.core.Mat;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class BoardUtils {
     static final int BOARD_SIZE = Constants.BOARD_SIZE;
-    static final int UNKNOWN = -1;
-    static final int SKULL = 0;
-    static final int SUPER_SKULL = 1;
-    static final int FIRE = 2;
-    static final int WATER = 3;
-    static final int EARTH = 4;
-    static final int GROUND = 5;
-    static final int LIGHT = 6;
-    static final int DARK = 7;
-    static final int BLOCK = 8;
-    static final int LYCANTHROPY = 9;
-    static final int DARK_POTION = 10;
-    static final int EARTH_POTION = 11;
-    static final int FIRE_POTION = 12;
-    static final int GROUND_POTION = 13;
-    static final int LIGHT_POTION = 14;
-    static final int WATER_POTION = 15;
-    static final int UBER_DOOM_SKULL = 16;
-    static final int WILD_2 = 17;
-    static final int WILD_3 = 18;
-    static final int WILD_4 = 19;
+    static final int MIN_MATCH_SIZE = 3;
+    static final int MIN_EXTRA_TURN_MATCH = 4;
 
-    static final Map<Integer, Integer> matchGroup = new HashMap<Integer, Integer>() {{
-        put(SKULL, SKULL);
-        put(SUPER_SKULL, SKULL);
-        put(FIRE, FIRE);
-        put(WATER, WATER);
-        put(EARTH, EARTH);
-        put(GROUND, GROUND);
-        put(LIGHT, LIGHT);
-        put(DARK, DARK);
-        put(LYCANTHROPY, DARK);
-        put(DARK_POTION, DARK);
-        put(EARTH_POTION, EARTH);
-        put(FIRE_POTION, FIRE);
-        put(GROUND_POTION, GROUND);
-        put(LIGHT_POTION, LIGHT);
-        put(WATER_POTION, WATER);
-        put(UBER_DOOM_SKULL, SKULL);
-        put(WILD_2, WILD_2);
-        put(WILD_3, WILD_3);
-        put(WILD_4, WILD_4);
-    }};
+    public static class MatchedGroup {
+        private int multiplier;
+        private final ArrayList<Gem> groupGems;
 
-    static final Set<Integer> wildGems = new HashSet<Integer>() {{
-        add(WILD_2);
-        add(WILD_3);
-        add(WILD_4);
-    }};
-
-    static final Set<Integer> matchesWildGems = new HashSet<Integer>() {{
-        add(FIRE);
-        add(WATER);
-        add(LIGHT);
-        add(DARK);
-        add(EARTH);
-        add(GROUND);
-        add(WILD_2);
-        add(WILD_3);
-        add(WILD_4);
-    }};
-
-    static final Set<Integer> createsInvalidFinalBoard = new HashSet<Integer>() {{
-        add(DARK_POTION);
-        add(EARTH_POTION);
-        add(FIRE_POTION);
-        add(GROUND_POTION);
-        add(LIGHT_POTION);
-        add(WATER_POTION);
-    }};
-
-    private static boolean isWild(int gemType) {
-        return wildGems.contains(gemType);
-    }
-
-    private static boolean matchesWild(int gemType) {
-        return matchesWildGems.contains(gemType);
-    }
-
-    private static boolean isMatching(int gemType1, int gemType2){
-        if(gemType1 == BLOCK || gemType2 == BLOCK || gemType1 == UNKNOWN || gemType2 == UNKNOWN){
-            return false;
+        public MatchedGroup() {
+            multiplier = 0;
+            groupGems = new ArrayList<>();
         }
-        if((isWild(gemType1) && matchesWild(gemType2)) || (isWild(gemType2) && matchesWild(gemType1))){
-            return true;
+
+        public void addMultiplier(int addedMultiplier){
+            multiplier += addedMultiplier;
         }
-        return matchGroup.get(gemType1).equals(matchGroup.get(gemType2));
-    }
 
-    private static boolean canMove(int orbType){
-        return orbType != BLOCK;
-    }
+        public int getMultiplier() {
+            return Math.max(1, multiplier);
+        }
 
-    private static boolean hasHorizontalMatch(int[][] board, int r, int c){
-        return c > 0 && c < BOARD_SIZE - 1 && isMatching(board[r][c-1], board[r][c])
-                && isMatching(board[r][c], board[r][c+1]);
-    }
+        public void addGem(Gem addedGem) {
+            groupGems.add(addedGem);
+        }
 
-    private static boolean hasVerticalMatch(int[][] board, int r, int c){
-        return r > 0 && r < BOARD_SIZE - 1 && isMatching(board[r-1][c], board[r][c])
-                && isMatching(board[r][c], board[r+1][c]);
-    }
-
-    public static void fillGaps(int[][] board){
-        for(int j = 0; j < BOARD_SIZE; j++){
-            int swapIndex = BOARD_SIZE-1;
-            for(int i = BOARD_SIZE-1; i >= 0; i--){
-                if(board[i][j] != UNKNOWN){
-                    if(swapIndex != i){
-                        board[swapIndex][j] = board[i][j];
-                        board[i][j] = UNKNOWN;
-                    }
-                    swapIndex--;
-                }
-            }
+        public ArrayList<Gem> getGroupGems() {
+            return groupGems;
         }
     }
 
-    private static void matchOrb(int[][] board, boolean[][] matched, int r, int c){
-        // Check if out of bounds.
-        if(r < 0 || c < 0 || r >= BOARD_SIZE || c >= BOARD_SIZE || matched[r][c] || board[r][c] == UNKNOWN){
-            return;
-        }
-        matched[r][c] = true;
-    }
-
-    private static void explodeOrb(int[][] board, boolean[][] matched, boolean[][] exploded, int r, int c){
-        matchOrb(board, matched, r, c);
-        // Check if out of bounds.
-        if(r < 0 || c < 0 || r >= BOARD_SIZE || c >= BOARD_SIZE || exploded[r][c] || (board[r][c] != SUPER_SKULL && board[r][c] != UBER_DOOM_SKULL)){
-            return;
-        }
-        exploded[r][c] = true;
-        if(board[r][c] == SUPER_SKULL) {
-            for(int i = r-1; i <= r+1; i++){
-                for(int j = c-1; j <= c+1; j++){
-                    explodeOrb(board, matched, exploded, i, j);
-                }
-            }
-        }else if(board[r][c] == UBER_DOOM_SKULL) {
-            for(int i = -2; i <= 2; i++) {
-                for(int j = -2; j <= 2; j++){
-                    if(!(Math.abs(i) == Math.abs(j) && Math.abs(i) == 2)){
-                        explodeOrb(board, matched, exploded, r+i, c+j);
-                    }
-                }
-            }
-        }
-    }
-
-    public static boolean matchBoard(int[][] board, Result result){
-        boolean[][] matched = new boolean[BOARD_SIZE][BOARD_SIZE];
-        boolean[][] exploded = new boolean[BOARD_SIZE][BOARD_SIZE];
-        for(int i = 0; i < BOARD_SIZE; i++){
-            for(int j = 0; j < BOARD_SIZE; j++){
-                if(hasHorizontalMatch(board, i, j)){
-                    matchOrb(board, matched, i, j-1);
-                    matchOrb(board, matched, i, j);
-                    matchOrb(board, matched, i, j+1);
-                }
-                if(hasVerticalMatch(board, i, j)){
-                    matchOrb(board, matched, i-1, j);
-                    matchOrb(board, matched, i, j);
-                    matchOrb(board, matched, i+1, j);
-                }
-            }
-        }
-        if(hasExtraTurn(board, matched)){
-            result.setExtraTurn(true);
-        }
-        // Do explosions after checking for extra turn
-        for(int i = 0; i < BOARD_SIZE; i++){
-            for(int j = 0; j < BOARD_SIZE; j++){
-                if(matched[i][j]){
-                    explodeOrb(board, matched, exploded, i, j);
-                }
-            }
-        }
-        boolean wasMatch = false;
-        for(int i = 0; i < BOARD_SIZE; i++){
-            for(int j = 0; j < BOARD_SIZE; j++){
-                if(matched[i][j] && board[i][j] != UNKNOWN){
-                    wasMatch = true;
-                    result.addMatched(board[i][j]);
-                    if(createsInvalidFinalBoard.contains(board[i][j])){
-                        result.setInvalidFinalBoard(true);
-                    }
-                    board[i][j] = -1;
-                }
-            }
-        }
-        return wasMatch;
-    }
-
-    public static boolean hasExtraTurn(int[][] board, boolean[][] matched){
-        boolean[][] visited = new boolean[BOARD_SIZE][BOARD_SIZE];
-        boolean extraTurn = false;
-        for(int i = 0; i < BOARD_SIZE; i++){
-            for(int j = 0; j < BOARD_SIZE; j++){
-                if(matched[i][j]){
-                    int thisMatch = DFS(board, matched, visited, i, j, board[i][j]);
-                    if(thisMatch > 3){
-                        extraTurn = true;
-                    }
-                }
-            }
-        }
-        return extraTurn;
-    }
-
-    private static int DFS(int[][] board, boolean[][] matched, boolean[][] visited, int r, int c, int orbType){
-        if(r < 0 || r >= BOARD_SIZE || c < 0 || c >= BOARD_SIZE || !matched[r][c] || visited[r][c] || !isMatching(board[r][c], orbType)){
-            return 0;
-        }
-        visited[r][c] = true;
-        int orbsMatched = 1;
-        orbsMatched += DFS(board, matched, visited, r-1, c, orbType);
-        orbsMatched += DFS(board, matched, visited, r+1, c, orbType);
-        orbsMatched += DFS(board, matched, visited, r, c-1, orbType);
-        orbsMatched += DFS(board, matched, visited, r, c+1, orbType);
-        return orbsMatched;
-    }
-
-    public static ArrayList<Result> getResults(int[][] board){
-        ArrayList<Result> results = new ArrayList<>();
-        for(int i = 0; i < BOARD_SIZE; i++){
-            for(int j = 0; j < BOARD_SIZE; j++){
-                if(j+1 < BOARD_SIZE && canMove(board[i][j]) && canMove(board[i][j+1])){
-                    int[][] boardCopy = copyBoard(board);
-                    int temp = boardCopy[i][j];
-                    boardCopy[i][j] = boardCopy[i][j+1];
-                    boardCopy[i][j+1] = temp;
-                    Result result = new Result(i, j, i, j+1, boardCopy);
-                    while (matchBoard(boardCopy, result)){
-                        fillGaps(boardCopy);
-                    }
-                    if(result.getInvalidFinalBoard()){
-                        for(int row = 0; row < BOARD_SIZE; row++){
-                            for(int col = 0; col < BOARD_SIZE; col++){
-                                boardCopy[row][col] = UNKNOWN;
-                            }
-                        }
-                    }
-                    if(result.totalMatched() > 0){
-                        results.add(result);
-                    }
-                }
-                if(i+1 < BOARD_SIZE && canMove(board[i][j]) && canMove(board[i+1][j])){
-                    int[][] boardCopy = copyBoard(board);
-                    int temp = boardCopy[i][j];
-                    boardCopy[i][j] = boardCopy[i+1][j];
-                    boardCopy[i+1][j] = temp;
-                    Result result = new Result(i, j, i+1, j, boardCopy);
-                    while (matchBoard(boardCopy, result)){
-                        fillGaps(boardCopy);
-                    }
-                    if(result.getInvalidFinalBoard()){
-                        for(int row = 0; row < BOARD_SIZE; row++){
-                            for(int col = 0; col < BOARD_SIZE; col++){
-                                boardCopy[row][col] = UNKNOWN;
-                            }
-                        }
-                    }
-                    if(result.totalMatched() > 0){
-                        results.add(result);
-                    }
-                }
-            }
-        }
-        return results;
-    }
-
-    public static ArrayList<Result> getSortedResults(int[][] board){
+    public static ArrayList<Result> getSortedResults(GemType[][] board){
         ArrayList<Result> results = getResults(board);
         results.sort((result1, result2) -> {
             if(result1.getExtraTurn() != result2.getExtraTurn()){
@@ -296,17 +76,242 @@ public class BoardUtils {
             if (result1.totalMatched() != result2.totalMatched()) {
                 return result2.totalMatched() - result1.totalMatched();
             }
-            return result1.getDisplayResults().get(0).orbType - result2.getDisplayResults().get(0).orbType;
+            int index1 = result1.getDisplayResults().get(0).gemType.ordinal();
+            int index2 = result2.getDisplayResults().get(0).gemType.ordinal();
+            return index1 - index2;
         });
         return results;
     }
 
-    public static int[][] copyBoard(int[][] board){
-        int[][] newBoard = new int[BOARD_SIZE][BOARD_SIZE];
-        for(int i = 0; i < BOARD_SIZE; i++){
-            System.arraycopy(board[i], 0, newBoard[i], 0, BOARD_SIZE);
+    public static ArrayList<Result> getResults(GemType[][] board){
+        ArrayList<Result> results = new ArrayList<>();
+        Gem[][] gemBoard = getGemBoard(board);
+
+        // Vertical swaps
+        for(int i = 0; i < BOARD_SIZE-1; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                if(!(gemBoard[i][j].canMove() && gemBoard[i+1][j].canMove())){
+                    continue;
+                }
+                Result result = getResult(board, i, j, i+1, j);
+                if(result.totalMatched() > 0){
+                    results.add(result);
+                }
+            }
         }
-        return newBoard;
+
+        // Horizontal swaps
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE - 1; j++){
+                if(!(gemBoard[i][j].canMove() && gemBoard[i][j+1].canMove())){
+                    continue;
+                }
+                Result result = getResult(board, i, j, i, j+1);
+                if(result.totalMatched() > 0){
+                    results.add(result);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public static Result getResult(GemType[][] board, int r1, int c1, int r2, int c2) {
+        Gem[][] gemBoard = getSwappedGemBoard(board, r1, c1, r2, c2);
+        Result result = new Result(r1, c1, r2, c2);
+        while(matchBoard(gemBoard, result)){
+            fillGaps(gemBoard);
+        }
+        return result;
+    }
+
+    public static boolean matchBoard(Gem[][] gemBoard, Result result){
+        final int NUM_MATCH_TYPES = MatchType.values().length;
+        for(int k = 0; k < NUM_MATCH_TYPES; k++){
+            MatchType matchType = MatchType.values()[k];
+            boolean[][] matched = new boolean[BOARD_SIZE][BOARD_SIZE];
+
+            for(int i = 0; i < BOARD_SIZE; i++){
+                for(int j = 0; j < BOARD_SIZE; j++){
+                    matchHorizontalIfPossible(gemBoard, matchType, matched, i, j);
+                    matchVerticalIfPossible(gemBoard, matchType, matched, i, j);
+                }
+            }
+
+            processMatchedGems(gemBoard, matched, result, matchType);
+        }
+
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                if(gemBoard[i][j].isMatched()){
+                    gemBoard[i][j].explode(gemBoard, i, j);
+                }
+            }
+        }
+
+
+        boolean wasMatch = false;
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                if(gemBoard[i][j].isMatched()){
+                    wasMatch = true;
+                    result.addMatched(gemBoard[i][j]);
+                    if(gemBoard[i][j].createsInvalidFinalBoard()){
+                        result.setInvalidFinalBoard(true);
+                    }
+                    gemBoard[i][j] = new Unknown_Gem();
+                }
+            }
+        }
+        return wasMatch;
+    }
+
+    private static void matchHorizontalIfPossible(Gem[][] gemBoard, MatchType matchType, boolean[][] matched, int r, int c){
+        if(c + MIN_MATCH_SIZE > BOARD_SIZE){
+            // Can't fit match here.
+            return;
+        }
+        for(int i = 0; i < MIN_MATCH_SIZE; i++){
+            if(!gemBoard[r][c + i].matches(matchType)){
+                // Not a complete match.
+                return;
+            }
+        }
+        for(int i = 0; i < MIN_MATCH_SIZE; i++){
+            matched[r][c + i] = true;
+        }
+    }
+
+    private static void matchVerticalIfPossible(Gem[][] gemBoard, MatchType matchType, boolean[][] matched, int r, int c){
+        if(r + MIN_MATCH_SIZE > BOARD_SIZE){
+            // Can't fit match here.
+            return;
+        }
+        for(int i = 0; i < MIN_MATCH_SIZE; i++){
+            if(!gemBoard[r + i][c].matches(matchType)){
+                // Not a complete match.
+                return;
+            }
+        }
+        for(int i = 0; i < MIN_MATCH_SIZE; i++){
+            matched[r + i][c] = true;
+        }
+    }
+
+    private static void processMatchedGems(Gem[][] gemBoard, boolean[][] matched, Result result, MatchType matchType) {
+        boolean[][] visited = new boolean[BOARD_SIZE][BOARD_SIZE];
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                if(matched[i][j] && !visited[i][j]){
+                    MatchedGroup matchedGroup = new MatchedGroup();
+                    DFS(gemBoard, matched, visited, i, j, matchedGroup);
+                    ArrayList<Gem> matchedGems = matchedGroup.getGroupGems();
+                    int matchedMultiplier = matchedGroup.getMultiplier();
+                    int numMatched = matchedGems.size();
+                    if(numMatched >= MIN_EXTRA_TURN_MATCH){
+                        result.setExtraTurn(true);
+                    }
+                    for(int k = 0; k < numMatched; k++){
+                        matchedGems.get(k).match(matchType, matchedMultiplier);
+                    }
+                }
+            }
+        }
+    }
+
+
+    private static void DFS(Gem[][] board, boolean[][] matched, boolean[][] visited, int r, int c, MatchedGroup matchedGroup){
+        if(r < 0 || r >= BOARD_SIZE || c < 0 || c >= BOARD_SIZE || !matched[r][c] || visited[r][c]){
+            return;
+        }
+        visited[r][c] = true;
+        matchedGroup.addGem(board[r][c]);
+        matchedGroup.addMultiplier(board[r][c].getMultiplier());
+        DFS(board, matched, visited, r-1, c, matchedGroup);
+        DFS(board, matched, visited, r+1, c, matchedGroup);
+        DFS(board, matched, visited, r, c-1, matchedGroup);
+        DFS(board, matched, visited, r, c+1, matchedGroup);
+    }
+
+    public static void fillGaps(Gem[][] board){
+        for(int j = 0; j < BOARD_SIZE; j++){
+            int swapIndex = BOARD_SIZE-1;
+            for(int i = BOARD_SIZE-1; i >= 0; i--){
+                if(board[i][j] instanceof Unknown_Gem){
+                    if(swapIndex != i){
+                        Gem temp = board[swapIndex][j];
+                        board[swapIndex][j] = board[i][j];
+                        board[i][j] = temp;
+                    }
+                    swapIndex--;
+                }
+            }
+        }
+    }
+
+    public static Gem[][] getSwappedGemBoard(GemType[][] board, int r1, int c1, int r2, int c2) {
+        Gem[][] gemBoard = getGemBoard(board);
+        Gem temp = gemBoard[r1][c1];
+        gemBoard[r1][c1] = gemBoard[r2][c2];
+        gemBoard[r2][c2] = temp;
+        return gemBoard;
+    }
+
+
+    public static Gem[][] getGemBoard(GemType[][] board){
+        Gem[][] gemBoard = new Gem[BOARD_SIZE][BOARD_SIZE];
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for(int j = 0; j < BOARD_SIZE; j++){
+                gemBoard[i][j] = getGemFromType(board[i][j]);
+            }
+        }
+        return gemBoard;
+    }
+
+    public static Gem getGemFromType(GemType gemType){
+        switch (gemType) {
+            case FIRE:
+                return new Fire_Gem();
+            case FIRE_POTION:
+                return new Fire_Potion_Gem();
+            case WATER:
+                return new Water_Gem();
+            case WATER_POTION:
+                return new Water_Potion_Gem();
+            case EARTH:
+                return new Earth_Gem();
+            case EARTH_POTION:
+                return new Earth_Potion_Gem();
+            case LIGHT:
+                return new Light_Gem();
+            case LIGHT_POTION:
+                return new Light_Potion_Gem();
+            case DARK:
+                return new Dark_Gem();
+            case DARK_POTION:
+                return new Dark_Potion_Gem();
+            case LYCANTHROPY:
+                return new Lycanthropy_Gem();
+            case GROUND:
+                return new Ground_Gem();
+            case SKULL:
+                return new Skull_Gem();
+            case SUPER_SKULL:
+                return new Super_Skull_Gem();
+            case UBER_DOOM_SKULL:
+                return new Uber_Doom_Skull_Gem();
+            case WILD_X2:
+                return new Wild_X2_Gem();
+            case WILD_X3:
+                return new Wild_X3_Gem();
+            case WILD_X4:
+                return new Wild_X4_Gem();
+            case BLOCK:
+                return new Block_Gem();
+            case UNKNOWN:
+                return new Unknown_Gem();
+        }
+        return new Unknown_Gem();
     }
 
 }

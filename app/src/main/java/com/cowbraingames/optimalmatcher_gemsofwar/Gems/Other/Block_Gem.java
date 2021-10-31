@@ -25,4 +25,9 @@ public class Block_Gem extends Gem {
     public boolean canBeMultiplied() {
         return false;
     }
+
+    @Override
+    public boolean canMove() {
+        return false;
+    }
 }

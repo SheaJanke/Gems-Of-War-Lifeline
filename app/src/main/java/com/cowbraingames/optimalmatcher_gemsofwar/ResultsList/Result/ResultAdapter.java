@@ -45,8 +45,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
             position--;
         }
         ResultPair pair = displayResults.get(position);
-        holder.orbType.setImageResource(BoardGridAdapter.orbID[pair.orbType]);
-        holder.numOrbs.setText(String.valueOf(pair.numOrbs));
+        holder.orbType.setImageResource(BoardGridAdapter.orbID[pair.gemType]);
+        holder.numOrbs.setText(String.valueOf(pair.numGems));
     }
 
     @Override

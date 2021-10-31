@@ -1,10 +1,13 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result;
 
-public class ResultPair {
-    public final int numOrbs, orbType;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
-    public ResultPair(int numOrbs, int orbType){
-        this.numOrbs = numOrbs;
-        this.orbType = orbType;
+public class ResultPair {
+    public final int numGems;
+    public final GemType gemType;
+
+    public ResultPair(int numGems, GemType gemType){
+        this.numGems = numGems;
+        this.gemType = gemType;
     }
 }

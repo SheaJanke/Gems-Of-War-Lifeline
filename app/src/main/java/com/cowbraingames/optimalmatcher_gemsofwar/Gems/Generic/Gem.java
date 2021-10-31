@@ -46,4 +46,12 @@ public abstract class Gem {
     public boolean isMatched() {
         return isMatched;
     }
+
+    public boolean canMove() {
+        return true;
+    }
+
+    public boolean createsInvalidFinalBoard() {
+        return false;
+    }
 }
