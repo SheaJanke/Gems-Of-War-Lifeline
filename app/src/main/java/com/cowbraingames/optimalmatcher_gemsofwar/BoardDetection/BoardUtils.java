@@ -13,6 +13,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Unknown_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Dark_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Earth_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Fire_Potion_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Ground_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Light_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Water_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Skull.Skull_Gem;
@@ -30,6 +31,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.opencv.core.Mat;
 
 import java.lang.reflect.Array;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 public class BoardUtils {
@@ -318,6 +320,8 @@ public class BoardUtils {
                 return new Lycanthropy_Gem();
             case GROUND:
                 return new Ground_Gem();
+            case GROUND_POTION:
+                return new Ground_Potion_Gem();
             case SKULL:
                 return new Skull_Gem();
             case SUPER_SKULL:
@@ -335,7 +339,7 @@ public class BoardUtils {
             case UNKNOWN:
                 return new Unknown_Gem();
         }
-        return new Unknown_Gem();
+        throw new InvalidParameterException("Gem Type Invalid: " + gemType);
     }
 
 }
