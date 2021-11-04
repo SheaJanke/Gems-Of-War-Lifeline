@@ -40,10 +40,12 @@ public class BoardUtils {
     public static class MatchedGroup {
         private int multiplier;
         private final ArrayList<Gem> groupGems;
+        private boolean validMatch;
 
         public MatchedGroup() {
             multiplier = 0;
             groupGems = new ArrayList<>();
+            validMatch = false;
         }
 
         public void addMultiplier(int addedMultiplier){
@@ -60,6 +62,14 @@ public class BoardUtils {
 
         public ArrayList<Gem> getGroupGems() {
             return groupGems;
+        }
+
+        public void setValidMatch(boolean validMatch){
+            this.validMatch = validMatch;
+        }
+
+        public boolean getValidMatch(){
+            return validMatch;
         }
     }
 
@@ -213,6 +223,10 @@ public class BoardUtils {
                     MatchedGroup matchedGroup = new MatchedGroup();
                     DFS(gemBoard, matched, visited, i, j, matchedGroup);
                     ArrayList<Gem> matchedGems = matchedGroup.getGroupGems();
+                    if(!matchedGroup.getValidMatch()){
+                        // Currently, this occurs if only wild gems are matched.
+                        continue;
+                    }
                     int matchedMultiplier = matchedGroup.getMultiplier();
                     int numMatched = matchedGems.size();
                     if(numMatched >= MIN_EXTRA_TURN_MATCH){
@@ -234,6 +248,9 @@ public class BoardUtils {
         visited[r][c] = true;
         matchedGroup.addGem(board[r][c]);
         matchedGroup.addMultiplier(board[r][c].getMultiplier());
+        if(board[r][c].createsValidMatch()){
+            matchedGroup.setValidMatch(true);
+        }
         DFS(board, matched, visited, r-1, c, matchedGroup);
         DFS(board, matched, visited, r+1, c, matchedGroup);
         DFS(board, matched, visited, r, c-1, matchedGroup);

@@ -39,4 +39,9 @@ public abstract class Wild_Gem extends Gem{
     public boolean canBeMultiplied() {
         return true;
     }
+
+    @Override
+    public boolean createsValidMatch() {
+        return false;
+    }
 }

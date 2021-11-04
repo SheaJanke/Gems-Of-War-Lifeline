@@ -54,4 +54,6 @@ public abstract class Gem {
     public boolean createsInvalidFinalBoard() {
         return false;
     }
+
+    public boolean createsValidMatch() { return true; }
 }
