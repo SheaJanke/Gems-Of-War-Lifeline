@@ -33,8 +33,10 @@ public class Super_Skull_Gem extends Gem {
         addResult.put(GemType.SUPER_SKULL, 1);
         for(int i = -1; i <= 1; i++){
             for(int j = -1; j <= 1; j++){
-                if(r + i >= 0 && r + i < Constants.BOARD_SIZE && c + j >= 0 && c + j < Constants.BOARD_SIZE){
-                    board[r+i][c+j].explode(board, r+i, c+j);
+                int row = r + i;
+                int col = c + j;
+                if(row >= 0 && row < Constants.BOARD_SIZE && col >= 0 && col < Constants.BOARD_SIZE){
+                    board[row][col].explode(board, row, col);
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.cowbraingames.optimalmatcher_gemsofwar.Utils;
 public enum GemType {
     FIRE,
     FIRE_POTION,
+    BURNING,
     WATER,
     WATER_POTION,
     EARTH,

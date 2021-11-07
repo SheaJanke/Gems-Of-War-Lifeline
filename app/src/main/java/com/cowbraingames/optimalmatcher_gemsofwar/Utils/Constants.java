@@ -11,6 +11,7 @@ public class Constants {
     private static final Map<GemType, Integer> gemResource = new HashMap<GemType, Integer>() {{
        put(GemType.FIRE, R.drawable.fire);
        put(GemType.FIRE_POTION, R.drawable.fire_potion);
+       put(GemType.BURNING, R.drawable.burning);
        put(GemType.WATER, R.drawable.water);
        put(GemType.WATER_POTION, R.drawable.water_potion);
        put(GemType.EARTH, R.drawable.earth);
@@ -51,7 +52,8 @@ public class Constants {
             GemType.UBER_DOOM_SKULL,
             GemType.WILD_X2,
             GemType.WILD_X3,
-            GemType.WILD_X4
+            GemType.WILD_X4,
+            GemType.BURNING
     };
 
 

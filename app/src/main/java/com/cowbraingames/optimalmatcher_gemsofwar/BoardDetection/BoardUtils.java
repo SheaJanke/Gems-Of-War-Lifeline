@@ -8,6 +8,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Ground_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Light_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Water_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Block_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Burning_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Lycanthropy_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Unknown_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Dark_Potion_Gem;
@@ -300,6 +301,8 @@ public class BoardUtils {
                 return new Fire_Gem();
             case FIRE_POTION:
                 return new Fire_Potion_Gem();
+            case BURNING:
+                return new Burning_Gem();
             case WATER:
                 return new Water_Gem();
             case WATER_POTION:
