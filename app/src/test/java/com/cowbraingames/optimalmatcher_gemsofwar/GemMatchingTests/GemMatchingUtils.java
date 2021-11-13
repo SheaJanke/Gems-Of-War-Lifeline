@@ -67,11 +67,12 @@ public class GemMatchingUtils {
         return isValid;
     }
 
-    public static void matchAndAssert(GemType[][] initFrag, GemType[][] expectedFinalFrag,Map<GemType, Integer> expectedGemsMatched, boolean expectedExtraTurn) {
+    public static Result matchAndAssert(GemType[][] initFrag, GemType[][] expectedFinalFrag,Map<GemType, Integer> expectedGemsMatched, boolean expectedExtraTurn) {
         GemType[][] initialBoard = GemMatchingUtils.generateFullBoardFromFragment(initFrag);
         Result result = BoardUtils.getResult(initialBoard, 0, 0, 0, 0);
         assertTrue(validateDisplayResults(result, expectedGemsMatched));
         assertEquals(expectedExtraTurn, result.getExtraTurn());
         assertTrue(GemMatchingUtils.validateGemBoardFromFragment(expectedFinalFrag, result.getFinalBoard()));
+        return result;
     }
 }

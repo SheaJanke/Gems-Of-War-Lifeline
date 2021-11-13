@@ -13,6 +13,7 @@ public class BasicTests {
     private final GemType FIRE = GemType.FIRE;
     private final GemType WATER = GemType.WATER;
     private final GemType UNKNOWN = GemType.UNKNOWN;
+    private final GemType BLOCK = GemType.BLOCK;
 
     @Test
     public void simple_match() {
@@ -38,6 +39,24 @@ public class BasicTests {
         GemType[][] expectedFinalFrag = {{UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN}};
         Map<GemType, Integer> expectedMatches = new HashMap<GemType, Integer>() {{
             put(FIRE, 4);
+        }};
+        matchAndAssert(initFrag, expectedFinalFrag, expectedMatches, true);
+    }
+
+    @Test
+    public void cross_match() {
+        GemType[][] initFrag = {
+                {BLOCK, FIRE, BLOCK},
+                {FIRE, FIRE, FIRE},
+                {BLOCK, FIRE, BLOCK}
+        };
+        GemType[][] expectedFinalFrag = {
+                {UNKNOWN, UNKNOWN, UNKNOWN},
+                {BLOCK, UNKNOWN, BLOCK},
+                {BLOCK, UNKNOWN, BLOCK}
+        };
+        Map<GemType, Integer> expectedMatches = new HashMap<GemType, Integer>() {{
+            put(FIRE, 5);
         }};
         matchAndAssert(initFrag, expectedFinalFrag, expectedMatches, true);
     }
