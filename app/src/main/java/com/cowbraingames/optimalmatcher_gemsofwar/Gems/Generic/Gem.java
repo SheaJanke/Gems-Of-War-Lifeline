@@ -3,6 +3,7 @@ package com.cowbraingames.optimalmatcher_gemsofwar.Gems.Generic;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.MatchType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +21,10 @@ public abstract class Gem {
     }
 
     public abstract GemType getDisplayGemType();
-    public GemType getResultGemType(MatchType matchType){
-        return getDisplayGemType();
+    public ArrayList<GemType> getResultGemTypes(MatchType matchType){
+        return new ArrayList<GemType>(){{
+            add(getDisplayGemType());
+        }};
     }
     public abstract boolean matches(MatchType type);
     public abstract void explode(Gem[][] board, int r, int c);
@@ -32,10 +35,13 @@ public abstract class Gem {
             return;
         }
         isMatched = true;
-        if(canBeMultiplied()){
-            addResult.put(getResultGemType(matchType), multiplier);
-        }else{
-            addResult.put(getResultGemType(matchType), 1);
+        ArrayList<GemType> resultGemTypes = getResultGemTypes(matchType);
+        for(GemType gemType : resultGemTypes) {
+            if(canBeMultiplied()){
+                addResult.put(gemType, multiplier);
+            }else{
+                addResult.put(gemType, 1);
+            }
         }
     }
 

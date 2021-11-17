@@ -22,5 +22,6 @@ public enum GemType {
     WILD_X2,
     WILD_X3,
     WILD_X4,
+    NEXUS_STAR,
     UNKNOWN
 }

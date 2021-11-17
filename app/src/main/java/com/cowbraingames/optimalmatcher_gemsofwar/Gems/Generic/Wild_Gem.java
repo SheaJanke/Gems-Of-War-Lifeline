@@ -3,6 +3,10 @@ package com.cowbraingames.optimalmatcher_gemsofwar.Gems.Generic;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.MatchType;
 
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
+
 public abstract class Wild_Gem extends Gem{
 
     @Override
@@ -16,23 +20,33 @@ public abstract class Wild_Gem extends Gem{
     }
 
     @Override
-    public GemType getResultGemType(MatchType matchType){
+    public ArrayList<GemType> getResultGemTypes(MatchType matchType){
         assert matches(matchType);
+        GemType resultGemType = getDisplayGemType();
         switch (matchType) {
             case FIRE:
-                return GemType.FIRE;
+                resultGemType = GemType.FIRE;
+                break;
             case WATER:
-                return GemType.WATER;
+                resultGemType = GemType.WATER;
+                break;
             case EARTH:
-                return GemType.EARTH;
+                resultGemType = GemType.EARTH;
+                break;
             case LIGHT:
-                return GemType.LIGHT;
+                resultGemType = GemType.LIGHT;
+                break;
             case DARK:
-                return GemType.DARK;
+                resultGemType = GemType.DARK;
+                break;
             case GROUND:
-                return GemType.GROUND;
+                resultGemType = GemType.GROUND;
+                break;
         }
-        return getDisplayGemType();
+        GemType finalResultGemType = resultGemType;
+        return new ArrayList<GemType>(){{
+            add(finalResultGemType);
+        }};
     }
 
     @Override

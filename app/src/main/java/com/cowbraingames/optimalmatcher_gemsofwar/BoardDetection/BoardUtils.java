@@ -10,6 +10,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Water_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Block_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Burning_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Lycanthropy_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Nexus_Star_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Unknown_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Dark_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Earth_Potion_Gem;
@@ -337,12 +338,21 @@ public class BoardUtils {
                 return new Wild_X3_Gem();
             case WILD_X4:
                 return new Wild_X4_Gem();
+            case NEXUS_STAR:
+                return new Nexus_Star_Gem();
             case BLOCK:
                 return new Block_Gem();
             case UNKNOWN:
                 return new Unknown_Gem();
         }
         throw new InvalidParameterException("Gem Type Invalid: " + gemType);
+    }
+
+
+    public static void explodeIfInBoard(Gem[][] board, int r, int c){
+        if(r < BOARD_SIZE && r >= 0 && c < BOARD_SIZE && c >= 0){
+            board[r][c].explode(board, r, c);
+        }
     }
 
 }

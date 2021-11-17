@@ -1,18 +1,13 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.GemMatchingTests;
 
-import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
-import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.ResultPair;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.cowbraingames.optimalmatcher_gemsofwar.GemMatchingTests.GemMatchingUtils.matchAndAssert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class WildTests {
     private final GemType FIRE = GemType.FIRE;

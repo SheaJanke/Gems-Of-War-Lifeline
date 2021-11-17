@@ -30,6 +30,7 @@ public class Constants {
        put(GemType.WILD_X2, R.drawable.wild_2);
        put(GemType.WILD_X3, R.drawable.wild_3);
        put(GemType.WILD_X4, R.drawable.wild_4);
+       put(GemType.NEXUS_STAR, R.drawable.nexus_star);
     }};
 
     public static final GemType[] boardDetectionLabels = {
@@ -53,7 +54,8 @@ public class Constants {
             GemType.WILD_X2,
             GemType.WILD_X3,
             GemType.WILD_X4,
-            GemType.BURNING
+            GemType.BURNING,
+            GemType.NEXUS_STAR
     };
 
 

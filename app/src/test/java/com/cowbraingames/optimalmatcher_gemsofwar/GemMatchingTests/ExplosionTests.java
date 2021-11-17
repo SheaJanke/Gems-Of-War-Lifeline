@@ -12,13 +12,11 @@ import static com.cowbraingames.optimalmatcher_gemsofwar.GemMatchingTests.GemMat
 public class ExplosionTests {
     private final GemType FIRE = GemType.FIRE;
     private final GemType WATER = GemType.WATER;
-    private final GemType WILD_X2 = GemType.WILD_X2;
-    private final GemType WILD_X3 = GemType.WILD_X3;
-    private final GemType WILD_X4 = GemType.WILD_X4;
     private final GemType UNKNOWN = GemType.UNKNOWN;
     private final GemType SKULL = GemType.SKULL;
     private final GemType SUPER_SKULL = GemType.SUPER_SKULL;
     private final GemType UBER_DOOM_SKULL = GemType.UBER_DOOM_SKULL;
+    private final GemType NEXUS_STAR = GemType.NEXUS_STAR;
     private final GemType BLOCK = GemType.BLOCK;
 
     @Test
@@ -67,6 +65,34 @@ public class ExplosionTests {
             put(UBER_DOOM_SKULL, 1);
             put(FIRE, 8);
             put(WATER, 10);
+        }};
+        matchAndAssert(initFrag, expectedFinalFrag, expectedMatches, false);
+    }
+
+    @Test
+    public void nexus_star_full_explosion() {
+        GemType[][] initFrag = {
+                {BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, SKULL},
+                {SKULL, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, SKULL, BLOCK},
+                {BLOCK, SKULL, BLOCK, BLOCK, BLOCK, SKULL, BLOCK, BLOCK},
+                {BLOCK, BLOCK, SKULL, BLOCK, SKULL, BLOCK, BLOCK, BLOCK},
+                {BLOCK, BLOCK, WATER, NEXUS_STAR, WATER, BLOCK, BLOCK, BLOCK},
+                {BLOCK, BLOCK, SKULL, BLOCK, SKULL, BLOCK, BLOCK, BLOCK},
+                {BLOCK, SKULL, BLOCK, BLOCK, BLOCK, SKULL, BLOCK, BLOCK},
+                {SKULL, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, SKULL, BLOCK},
+        };
+        GemType[][] expectedFinalFrag = {
+                {UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN},
+                {UNKNOWN, UNKNOWN, UNKNOWN, BLOCK, UNKNOWN, UNKNOWN, UNKNOWN, BLOCK},
+                {BLOCK, BLOCK, UNKNOWN, BLOCK, UNKNOWN, BLOCK, BLOCK, BLOCK},
+
+        };
+        Map<GemType, Integer> expectedMatches = new HashMap<GemType, Integer>() {{
+            put(WATER, 3);
+            put(GemType.EARTH, 1);
+            put(FIRE, 1);
+            put(GemType.GROUND, 1);
+            put(SKULL, 13);
         }};
         matchAndAssert(initFrag, expectedFinalFrag, expectedMatches, false);
     }
