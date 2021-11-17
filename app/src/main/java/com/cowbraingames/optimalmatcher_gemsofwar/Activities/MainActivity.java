@@ -21,10 +21,12 @@ import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.MainActivityBoard;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGrid;
 import com.cowbraingames.optimalmatcher_gemsofwar.Camera.CameraManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.Exceptions.BoardNotFoundException;
 import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
 import com.cowbraingames.optimalmatcher_gemsofwar.Storage.LocalStorageManager;
+import com.cowbraingames.optimalmatcher_gemsofwar.Utils.ErrorDialogManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -142,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
                 });
             }catch (Exception e) {
                 e.printStackTrace();
+                runOnUiThread(() -> {
+                    spinner.setVisibility(View.INVISIBLE);
+                    if(e instanceof BoardNotFoundException){
+                        ErrorDialogManager.showErrorDialog(context, R.string.error_dialog_title_board_not_found, R.string.error_dialog_description_board_not_found);
+                    }
+                });
             }
         }).start();
     }

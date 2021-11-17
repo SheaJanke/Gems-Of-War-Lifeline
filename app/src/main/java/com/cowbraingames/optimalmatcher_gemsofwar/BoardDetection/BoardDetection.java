@@ -7,6 +7,7 @@ import android.util.Pair;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.cowbraingames.optimalmatcher_gemsofwar.Exceptions.BoardNotFoundException;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 
 import org.checkerframework.checker.units.qual.A;
@@ -32,7 +33,7 @@ public class BoardDetection {
     private final Bitmap fullBoard;
     private final Bitmap[][] orbs;
 
-    public BoardDetection(Bitmap boardBitmap, ImageView testImg, Activity mainActivity){
+    public BoardDetection(Bitmap boardBitmap, ImageView testImg, Activity mainActivity) throws BoardNotFoundException {
         board = new Mat();
         edges = new Mat();
         circles = new Mat();
@@ -41,8 +42,12 @@ public class BoardDetection {
         Bitmap bmp32 = boardBitmap.copy(Bitmap.Config.ARGB_8888, true);
         Bitmap compressedBoard = Bitmap.createScaledBitmap(bmp32, bmp32.getWidth() / 6, bmp32.getHeight() / 6, true);
         Utils.bitmapToMat(compressedBoard, board);
-        detectEdges();
-        detectCircles();
+        try {
+            detectEdges();
+            detectCircles();
+        } catch (Exception e) {
+            throw new BoardNotFoundException();
+        }
         Bitmap img = matToBitmap(edges);
         mainActivity.runOnUiThread(() -> testImg.setImageBitmap(img));
     }
@@ -55,16 +60,16 @@ public class BoardDetection {
         while(curWhite/totalPixels < 0.1){
             Imgproc.Canny(board, edges, threshold1, 2.5*threshold1);
             curWhite = Core.countNonZero(edges);
-            //System.out.println("Threshold: " + threshold1 + " ratio: " + curWhite/totalPixels);
+            System.out.println("Threshold: " + threshold1 + " ratio: " + curWhite/totalPixels);
             threshold1*= 0.95;
         }
         System.out.println("Finished Edge Detection");
-
     }
 
 
 
-    private void detectCircles(){
+    private void detectCircles() throws BoardNotFoundException{
+        final int MIN_THRESHOLD = 12;
         System.out.println("Starting HoughCircles");
         int minDimension = Math.min(edges.rows(), edges.cols());
         int maxRadius = minDimension/16;
@@ -72,9 +77,13 @@ public class BoardDetection {
         int curThreshold = 200;
         boolean foundBoard = false;
         while(!foundBoard){
+            if(curThreshold < MIN_THRESHOLD){
+                throw new BoardNotFoundException();
+            }
             Imgproc.HoughCircles(edges, circles, Imgproc.CV_HOUGH_GRADIENT, 1.5, 2*minRadius, 10, curThreshold, minRadius,  maxRadius);
             foundBoard = drawCircles();
             curThreshold *= 0.95;
+            System.out.println("Circle Threshold: " + curThreshold);
         }
 
     }

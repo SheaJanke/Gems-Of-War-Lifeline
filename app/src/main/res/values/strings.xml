@@ -6,6 +6,9 @@
         report it to help improve the image classification in future app updates.
     </string>
     <string name="report_dialog_incorrect">Report</string>
+    <string name="error_dialog_title_board_not_found">Error: Could not find board</string>
+    <string name="error_dialog_description_board_not_found">The gem board could not be found from the image. Please see tutorial for tips on how to take a better picture.</string>
+    <string name="error_dialog_ok_button">OK</string>
     <string name="settings">Settings</string>
     <string name="settings_autocrop">Auto-crop images</string>
     <string name="menu_tutorial">Tutorial</string>
