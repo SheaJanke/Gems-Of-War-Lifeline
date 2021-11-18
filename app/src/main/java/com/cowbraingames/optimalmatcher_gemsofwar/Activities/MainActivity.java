@@ -12,10 +12,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardDetection;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.MainActivityBoard;
@@ -28,7 +31,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
 import com.cowbraingames.optimalmatcher_gemsofwar.Storage.LocalStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.ErrorDialogManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.canhub.cropper.CropImage;
 
 import java.io.IOException;
 
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private Activity mainActivity;
     private ProgressBar spinner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,17 +119,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("Activity Result: " + requestCode + " " + resultCode + " " + data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
         switch (requestCode){
             case USE_CAMERA:
-            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                if(resultCode == Activity.RESULT_OK){
+                if(LocalStorageManager.getAutoCropPreference(context)){
                     try {
-                        Bitmap boardBitmap = cameraManager.handleCameraResult(requestCode, data);
+                        Bitmap boardBitmap = cameraManager.handleAutoCropCameraResult();
                         updateBoardGrid(boardBitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }else{
+                    cameraManager.startCropCameraActivity();
                 }
+                break;
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                try {
+                    Bitmap boardBitmap = cameraManager.handleCropCameraResult(data);
+                    updateBoardGrid(boardBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 break;
         }
