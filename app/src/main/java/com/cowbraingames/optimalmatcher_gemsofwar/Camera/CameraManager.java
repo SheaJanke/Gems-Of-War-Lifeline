@@ -12,18 +12,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
-import com.canhub.cropper.CropImageActivity;
-import com.canhub.cropper.CropImageContract;
-import com.canhub.cropper.CropImageContractOptions;
-import com.cowbraingames.optimalmatcher_gemsofwar.Activities.MainActivity;
-import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
-import com.cowbraingames.optimalmatcher_gemsofwar.Storage.LocalStorageManager;
 import com.canhub.cropper.CropImage;
 import com.canhub.cropper.CropImageView;
+import com.cowbraingames.optimalmatcher_gemsofwar.Activities.MainActivity;
+import com.cowbraingames.optimalmatcher_gemsofwar.Permissions.PermissionsManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +34,10 @@ public class CameraManager {
     public CameraManager(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
+        setupImageFile();
+    }
+
+    private void setupImageFile() {
         File storageDirectory = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         try {
             File imageFile = new File(storageDirectory, FILE_NAME);
@@ -59,21 +58,18 @@ public class CameraManager {
     }
 
     private void startCameraActivity() {
-        startAutoCropCameraActivity();
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+        activity.startActivityForResult(intent, MainActivity.USE_CAMERA);
     }
 
-    public void startCropCameraActivity() {
+    public void startCropActivity() {
         CropImage.activity(imgUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
                 .start(activity);
     }
 
-    private void startAutoCropCameraActivity() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-        activity.startActivityForResult(intent, MainActivity.USE_CAMERA);
-    }
 
     public void saveImagePath(Bundle savedInstanceState) {
         savedInstanceState.putString("imagePath", imagePath);
@@ -83,12 +79,6 @@ public class CameraManager {
         imagePath = savedInstanceState.getString("imagePath");
     }
 
-    public Bitmap handleCameraResult(int requestCode, @Nullable Intent data) throws IOException {
-        if(requestCode == MainActivity.USE_CAMERA){
-            return handleAutoCropCameraResult();
-        }
-        return handleCropCameraResult(data);
-    }
 
     public Bitmap handleCropCameraResult(@Nullable Intent data) throws IOException {
         CropImage.ActivityResult result = CropImage.getActivityResult(data);

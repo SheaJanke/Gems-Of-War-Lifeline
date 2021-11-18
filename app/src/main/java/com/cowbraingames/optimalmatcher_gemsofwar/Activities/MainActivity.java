@@ -12,13 +12,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.canhub.cropper.CropImageContract;
-import com.canhub.cropper.CropImageContractOptions;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardDetection;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.MainActivityBoard;
@@ -119,33 +116,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("Activity Result: " + requestCode + " " + resultCode + " " + data);
         if(resultCode != Activity.RESULT_OK){
             return;
         }
         switch (requestCode){
             case USE_CAMERA:
-                if(LocalStorageManager.getAutoCropPreference(context)){
-                    try {
-                        Bitmap boardBitmap = cameraManager.handleAutoCropCameraResult();
-                        updateBoardGrid(boardBitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    cameraManager.startCropCameraActivity();
-                }
+                handleCameraResult();
                 break;
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                try {
-                    Bitmap boardBitmap = cameraManager.handleCropCameraResult(data);
-                    updateBoardGrid(boardBitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                handleCropResult(data);
                 break;
-            default:
-                break;
+        }
+    }
+
+    private void handleCameraResult() {
+        if(LocalStorageManager.getAutoCropPreference(context)){
+            try {
+                Bitmap boardBitmap = cameraManager.handleAutoCropCameraResult();
+                updateBoardGrid(boardBitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ErrorDialogManager.showErrorDialog(context, R.string.error_dialog_title_camera, R.string.error_dialog_description_camera);
+            }
+        }else{
+            cameraManager.startCropActivity();
+        }
+    }
+
+    private void handleCropResult(@Nullable Intent data) {
+        try {
+            Bitmap boardBitmap = cameraManager.handleCropCameraResult(data);
+            updateBoardGrid(boardBitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ErrorDialogManager.showErrorDialog(context, R.string.error_dialog_title_crop, R.string.error_dialog_description_crop);
         }
     }
 

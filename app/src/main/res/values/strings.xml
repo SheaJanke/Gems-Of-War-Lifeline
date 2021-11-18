@@ -8,6 +8,10 @@
     <string name="report_dialog_incorrect">Report</string>
     <string name="error_dialog_title_board_not_found">Error: Could not find board</string>
     <string name="error_dialog_description_board_not_found">The gem board could not be found from the image. Please see tutorial for tips on how to take a better picture.</string>
+    <string name="error_dialog_title_camera">Error: Could not take picture</string>
+    <string name="error_dialog_description_camera">An error occurred taking the picture. Please try again.</string>
+    <string name="error_dialog_title_crop">Error: Could not crop image</string>
+    <string name="error_dialog_description_crop">An error occurred cropping the image. Please try again.</string>
     <string name="error_dialog_ok_button">OK</string>
     <string name="settings">Settings</string>
     <string name="settings_autocrop">Auto-crop images</string>
