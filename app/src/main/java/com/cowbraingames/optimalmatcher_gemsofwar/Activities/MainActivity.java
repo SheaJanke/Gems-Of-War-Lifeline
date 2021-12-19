@@ -9,13 +9,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.canhub.cropper.CropImage;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardDetection;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.MainActivityBoard;
@@ -28,34 +31,32 @@ import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.ResultsList;
 import com.cowbraingames.optimalmatcher_gemsofwar.Storage.LocalStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.ErrorDialogManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.canhub.cropper.CropImage;
-
-import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int USE_CAMERA = 1;
+    private GridView gridView;
     private BoardGrid boardGrid;
     private ResultsList resultsList;
     private CameraManager cameraManager;
-    private ImageView testImg;
     private Context context;
-    private Activity mainActivity;
     private ProgressBar spinner;
+    private TextView description;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        mainActivity = this;
+        Activity mainActivity = this;
         setContentView(R.layout.activity_main);
         cameraManager = new CameraManager(context, mainActivity);
-        boardGrid = new BoardGrid(context, findViewById(R.id.board));
+        gridView = findViewById(R.id.board);
+        boardGrid = new BoardGrid(context, gridView);
         resultsList = new ResultsList(context, findViewById(R.id.results_list), boardGrid);
-        testImg = findViewById(R.id.testImg);
         spinner = findViewById(R.id.spinner);
+        description = findViewById(R.id.layout_description);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         cameraManager.saveImagePath(savedInstanceState);
     }
@@ -154,10 +155,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateBoardGrid(Bitmap boardBitmap) {
+        description.setVisibility(View.INVISIBLE);
+        gridView.setVisibility(View.VISIBLE);
         spinner.setVisibility(View.VISIBLE);
         new Thread(() -> {
             try{
-                BoardDetection boardDetection = new BoardDetection(boardBitmap, testImg, mainActivity);
+                BoardDetection boardDetection = new BoardDetection(boardBitmap);
                 MainActivityBoard board = new MainActivityBoard(context, boardDetection.getOrbs());
                 runOnUiThread(() -> {
                     boardGrid.setBoard(board);

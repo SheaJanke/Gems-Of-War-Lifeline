@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Gems of War Lifeline</string>
-    <string name="test">test</string>
+    <string name="main_activity_help">To get started, take a picture of the gem board using the in-app camera.</string>
+    <string name="invalid_final_board_msg">Could not calculate final board (caused by a potion match).</string>
     <string name="report_dialog_title">Report Orb?</string>
     <string name="report_dialog_description">If the orb you clicked is incorrect, please
         report it to help improve the image classification in future app updates.

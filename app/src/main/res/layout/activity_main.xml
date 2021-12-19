@@ -37,16 +37,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/board" />
 
-    <ImageView
-        android:id="@+id/testImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <GridView
         android:id="@+id/board"
         android:layout_width="0dp"
@@ -57,7 +47,7 @@
         android:background="@drawable/empty_board"
         android:gravity="center"
         android:numColumns="8"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,5 +73,19 @@
         app:layout_constraintEnd_toEndOf="@+id/board"
         app:layout_constraintStart_toStartOf="@+id/board"
         app:layout_constraintTop_toTopOf="@+id/board" />
+
+    <TextView
+        android:id="@+id/layout_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/main_activity_help"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/appBarLayout"
+        app:layout_constraintStart_toStartOf="@+id/appBarLayout"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

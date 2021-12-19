@@ -5,9 +5,12 @@ import android.os.Looper;
 import android.os.MessageQueue;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.Board.FinalActivityBoard;
@@ -21,9 +24,14 @@ import java.util.Objects;
 public class FinalBoardActivity extends AppCompatActivity {
 
     public static String FINAL_BOARD_KEY = "FINAL_BOARD";
+    public static String FINAL_BOARD_VALID_KEY = "FINAL_BOARD_VALID";
+    private TextView description;
+    private GridView boardGridView;
     private BoardGrid boardGrid;
     private ResultsList resultsList;
+    private RecyclerView resultsListView;
     private GemType[][] finalBoard;
+    private boolean validFinalBoard;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
@@ -41,9 +49,13 @@ public class FinalBoardActivity extends AppCompatActivity {
         getFinalBoardFromBundle();
         setupToolbar();
 
-        boardGrid = new BoardGrid(this, findViewById(R.id.board));
-        resultsList = new ResultsList(this, findViewById(R.id.results_list), boardGrid);
-        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+        description = findViewById(R.id.layout_description);
+        boardGridView = findViewById(R.id.board);
+        boardGrid = new BoardGrid(this, boardGridView);
+        resultsListView = findViewById(R.id.results_list);
+        resultsList = new ResultsList(this, resultsListView, boardGrid);
+
+        setVisibility();
 
         // Required to make sure the boardGrid is ready to show the orbs.
         MessageQueue.IdleHandler handler = () -> {
@@ -57,6 +69,7 @@ public class FinalBoardActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         assert bundle != null;
         finalBoard = (GemType[][]) bundle.getSerializable(FINAL_BOARD_KEY);
+        validFinalBoard = bundle.getBoolean(FINAL_BOARD_VALID_KEY);
     }
 
     void setupToolbar() {
@@ -65,6 +78,20 @@ public class FinalBoardActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    void setVisibility() {
+        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+        if(validFinalBoard){
+            boardGridView.setVisibility(View.VISIBLE);
+            resultsListView.setVisibility(View.VISIBLE);
+            description.setVisibility(View.INVISIBLE);
+        }else{
+            boardGridView.setVisibility(View.INVISIBLE);
+            resultsListView.setVisibility(View.INVISIBLE);
+            description.setVisibility(View.VISIBLE);
+            description.setText(R.string.invalid_final_board_msg);
+        }
     }
 
     private void fillBoardAndResults() {

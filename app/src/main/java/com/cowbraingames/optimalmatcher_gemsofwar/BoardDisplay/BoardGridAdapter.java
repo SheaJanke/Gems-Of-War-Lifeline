@@ -17,25 +17,6 @@ public class BoardGridAdapter extends BaseAdapter {
     private final boolean[][] selected;
     private final int imgSize;
     private final int BOARD_SIZE = Constants.BOARD_SIZE;
-    public static Integer[] orbID = {
-            R.drawable.skull,
-            R.drawable.super_skull,
-            R.drawable.fire,
-            R.drawable.water,
-            R.drawable.earth,
-            R.drawable.ground,
-            R.drawable.light,
-            R.drawable.dark,
-            R.drawable.block,
-            R.drawable.lycanthropy,
-            R.drawable.dark_potion,
-            R.drawable.earth_potion,
-            R.drawable.fire_potion,
-            R.drawable.ground_potion,
-            R.drawable.light_potion,
-            R.drawable.water_potion,
-            R.drawable.uber_doom_skull,
-    };
 
     public BoardGridAdapter(Context context, GemType[][] gems, boolean[][] selected, int imgSize){
         this.context = context;

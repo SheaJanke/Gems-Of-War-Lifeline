@@ -49,16 +49,17 @@ public class ResultsList {
             @Override
             public void onLongClick(View view, int position) {
                 updateHighlightedRow(position);
-                GemType[][] finalBoard = results.get(position).getFinalBoard();
-                startFinalBoardActivity(finalBoard);
+                Result result = results.get(position);
+                startFinalBoardActivity(result.getFinalBoard(), !result.getInvalidFinalBoard());
             }
         }));
     }
 
-    private void startFinalBoardActivity(GemType[][] finalBoard) {
+    private void startFinalBoardActivity(GemType[][] finalBoard, boolean finalBoardValid) {
         Intent intent = new Intent(context, FinalBoardActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(FinalBoardActivity.FINAL_BOARD_KEY, finalBoard);
+        bundle.putBoolean(FinalBoardActivity.FINAL_BOARD_VALID_KEY, finalBoardValid);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

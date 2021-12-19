@@ -1,10 +1,8 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.ImageView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.Exceptions.BoardNotFoundException;
 
@@ -29,7 +27,7 @@ public class BoardDetection {
     private final Bitmap fullBoard;
     private final Bitmap[][] orbs;
 
-    public BoardDetection(Bitmap boardBitmap, ImageView testImg, Activity mainActivity) throws BoardNotFoundException {
+    public BoardDetection(Bitmap boardBitmap) throws BoardNotFoundException {
         board = new Mat();
         edges = new Mat();
         circles = new Mat();
@@ -44,29 +42,23 @@ public class BoardDetection {
         } catch (Exception e) {
             throw new BoardNotFoundException();
         }
-        Bitmap img = matToBitmap(edges);
-        mainActivity.runOnUiThread(() -> testImg.setImageBitmap(img));
     }
 
     private void detectEdges(){
-        System.out.println("Starting Edge Detection");
         double totalPixels = board.rows() * board.cols();
         double curWhite = 0;
         int threshold1 = 500;
         while(curWhite/totalPixels < 0.1){
             Imgproc.Canny(board, edges, threshold1, 2.5*threshold1);
             curWhite = Core.countNonZero(edges);
-            System.out.println("Threshold: " + threshold1 + " ratio: " + curWhite/totalPixels);
             threshold1*= 0.95;
         }
-        System.out.println("Finished Edge Detection");
     }
 
 
 
     private void detectCircles() throws BoardNotFoundException{
         final int MIN_THRESHOLD = 12;
-        System.out.println("Starting HoughCircles");
         int minDimension = Math.min(edges.rows(), edges.cols());
         int maxRadius = minDimension/16;
         int minRadius = (int)(maxRadius/1.25);
@@ -79,9 +71,7 @@ public class BoardDetection {
             Imgproc.HoughCircles(edges, circles, Imgproc.CV_HOUGH_GRADIENT, 1.5, 2*minRadius, 10, curThreshold, minRadius,  maxRadius);
             foundBoard = drawCircles();
             curThreshold *= 0.95;
-            System.out.println("Circle Threshold: " + curThreshold);
         }
-
     }
 
     private boolean drawCircles(){
@@ -191,6 +181,7 @@ public class BoardDetection {
                 double threshold = Math.pow(medianRadius, 2)/6;
                 boolean works = false;
                 Pair<Integer, Integer> curPos = pos.get(cur);
+                assert curPos != null;
                 for(int j = 1; j <= 3; j++){
                     if(distance(p2, p.x - j*2*medianRadius, p.y) < threshold){
                         pos.put(i, Pair.create(curPos.first - j, curPos.second));
@@ -224,7 +215,6 @@ public class BoardDetection {
             minY = Math.min(minY, val.second);
             maxY = Math.max(maxY, val.second);
         }
-        System.out.println("Dims: " + minX + " " + maxX + " " + minY + " " + maxY);
         int[] x = new int[maxX-minX+1];
         int[] y = new int[maxY-minY+1];
         for(Pair<Integer, Integer> val: pos.values()){
@@ -274,6 +264,7 @@ public class BoardDetection {
         }
         for(int key: pos.keySet()){
             Pair<Integer, Integer> val = pos.get(key);
+            assert val != null;
             if(0 <= val.first - xCorrection  && val.first - xCorrection < 8){
                 if(0 <= val.second - yCorrection  && val.second - yCorrection < 8){
                     answer[val.first - xCorrection][val.second - yCorrection] = key;
