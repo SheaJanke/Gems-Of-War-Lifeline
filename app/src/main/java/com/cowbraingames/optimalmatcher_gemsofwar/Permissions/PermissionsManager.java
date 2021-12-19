@@ -8,12 +8,14 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PermissionsManager {
     public static final int CAMERA = 1;
     public static final int WRITE_EXTERNAL_STORAGE = 2;
+    public static final int ALL_PERMISSIONS = 3;
 
     private static final Map<Integer, String> permissionMapping = new HashMap<Integer, String>() {{
         put(CAMERA, Manifest.permission.CAMERA);
@@ -21,8 +23,21 @@ public class PermissionsManager {
     }};
 
     public static void requestAllPermissions(Activity activity, Context context) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
         for(Integer permissionCode: permissionMapping.keySet()){
-            requestPermissionIfNotGranted(activity, context, permissionCode);
+            try {
+                String permission = getPermissionFromCode(permissionCode);
+                if(!hasPermission(context, permission)){
+                    permissionsToRequest.add(permission);
+                }
+            }catch (InvalidPermissionCodeException e){
+                e.printStackTrace();
+            }
+        }
+        if(!permissionsToRequest.isEmpty()){
+            String[] requestArray = new String[permissionsToRequest.size()];
+            requestArray = permissionsToRequest.toArray(requestArray);
+            ActivityCompat.requestPermissions(activity, requestArray, ALL_PERMISSIONS);
         }
     }
 
