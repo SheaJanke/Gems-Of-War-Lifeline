@@ -11,6 +11,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Block_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Burning_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Lycanthropy_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Nexus_Star_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Umbral_Star_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Unknown_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Dark_Potion_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Potion.Earth_Potion_Gem;
@@ -340,6 +341,8 @@ public class BoardUtils {
                 return new Wild_X4_Gem();
             case NEXUS_STAR:
                 return new Nexus_Star_Gem();
+            case UMBRAL_STAR:
+                return new Umbral_Star_Gem();
             case BLOCK:
                 return new Block_Gem();
             case UNKNOWN:

@@ -1,16 +1,12 @@
 package com.cowbraingames.optimalmatcher_gemsofwar.GemMatchingTests;
 
-import android.util.Pair;
-
 import com.cowbraingames.optimalmatcher_gemsofwar.BoardDetection.BoardUtils;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.Result;
 import com.cowbraingames.optimalmatcher_gemsofwar.ResultsList.Result.ResultPair;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -55,6 +51,7 @@ public class GemMatchingUtils {
             int numMatched = matchedGems.get(i).numGems;
             if(expectedGemsMatched.getOrDefault(gemType, 0) != numMatched){
                 isValid = false;
+                System.out.println("GemType: " + gemType + ", Matched: " + numMatched);
             }
         }
         int expectedTotalMatched = 0;

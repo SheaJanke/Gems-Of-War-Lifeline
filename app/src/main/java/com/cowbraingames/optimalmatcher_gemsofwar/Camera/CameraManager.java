@@ -67,6 +67,7 @@ public class CameraManager {
         CropImage.activity(imgUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
+                .setAutoZoomEnabled(true)
                 .start(activity);
     }
 
