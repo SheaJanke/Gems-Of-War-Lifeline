@@ -4,6 +4,7 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Generic.Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 public class Result {
@@ -26,8 +27,12 @@ public class Result {
     }
 
     public void addMatched(Gem gem){
-        Map<GemType, Integer> addResult =  gem.getAddResult();
-        addResult.forEach(((gemType, numGems) -> matchedGems[gemType.ordinal()] += numGems));
+        Map<GemType, Integer> addResult = gem.getAddResult();
+        for(Map.Entry<GemType, Integer> entry: addResult.entrySet()){
+            GemType gemType = entry.getKey();
+            Integer numGems = entry.getValue();
+            matchedGems[gemType.ordinal()] += numGems;
+        }
     }
 
     public int totalMatched(){
@@ -69,7 +74,7 @@ public class Result {
                 displayResults.add(new ResultPair(matchedGems[i], GemType.values()[i]));
             }
         }
-        displayResults.sort((r1, r2) -> {
+        Collections.sort(displayResults, (r1, r2) -> {
             if (r1.numGems != r2.numGems) {
                 return r2.numGems - r1.numGems;
             } else {

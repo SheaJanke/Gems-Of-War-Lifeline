@@ -67,9 +67,9 @@ public class TutorialActivity extends AppCompatActivity {
     private void resetHighlightedDot() {
         for(int i = 0; i < NUM_TUTORIAL_SCREENS; i++){
             if(i == currentPage) {
-                dots[i].setTextColor(getColor(R.color.colorAccent));
+                dots[i].setTextColor(getResources().getColor(R.color.colorAccent));
             }else{
-                dots[i].setTextColor(getColor(R.color.colorPrimaryDark));
+                dots[i].setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             }
         }
     }

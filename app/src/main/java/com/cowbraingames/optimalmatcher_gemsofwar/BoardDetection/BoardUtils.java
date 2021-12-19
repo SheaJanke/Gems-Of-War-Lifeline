@@ -30,12 +30,9 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.MatchType;
 
-import org.checkerframework.checker.units.qual.A;
-import org.opencv.core.Mat;
-
-import java.lang.reflect.Array;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class BoardUtils {
     static final int BOARD_SIZE = Constants.BOARD_SIZE;
@@ -80,7 +77,7 @@ public class BoardUtils {
 
     public static ArrayList<Result> getSortedResults(GemType[][] board){
         ArrayList<Result> results = getResults(board);
-        results.sort((result1, result2) -> {
+        Collections.sort(results, (result1, result2) -> {
             if(result1.getExtraTurn() != result2.getExtraTurn()){
                 if(result1.getExtraTurn()){
                     return -1;
@@ -137,7 +134,7 @@ public class BoardUtils {
         while(matchBoard(gemBoard, result)){
             fillGaps(gemBoard);
         }
-        GemType finalBoard[][] = new GemType[BOARD_SIZE][BOARD_SIZE];
+        GemType[][] finalBoard = new GemType[BOARD_SIZE][BOARD_SIZE];
         for(int i = 0; i < BOARD_SIZE; i++){
             for(int j = 0; j< BOARD_SIZE; j++){
                 finalBoard[i][j] = gemBoard[i][j].getDisplayGemType();

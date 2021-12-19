@@ -21,7 +21,9 @@ public class PermissionsManager {
     }};
 
     public static void requestAllPermissions(Activity activity, Context context) {
-        permissionMapping.keySet().forEach(permissionCode -> requestPermissionIfNotGranted(activity, context, permissionCode));
+        for(Integer permissionCode: permissionMapping.keySet()){
+            requestPermissionIfNotGranted(activity, context, permissionCode);
+        }
     }
 
     public static void requestPermissionIfNotGranted(Activity activity, Context context, int permissionCode) {

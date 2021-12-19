@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.Pair;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.cowbraingames.optimalmatcher_gemsofwar.Exceptions.BoardNotFoundException;
-import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 
-import org.checkerframework.checker.units.qual.A;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvException;
@@ -23,7 +20,6 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,7 +88,7 @@ public class BoardDetection {
         ArrayList<Pair<Integer, Point>> coords = new ArrayList<>();
         for (int x = 0; x < circles.cols(); x++)
         {
-            double vCircle[] = circles.get(0,x);
+            double[] vCircle = circles.get(0,x);
 
             if (vCircle == null)
                 break;
@@ -105,14 +101,20 @@ public class BoardDetection {
         if(coords.isEmpty()){
             return false;
         }
-        coords.sort((p1, p2) -> p1.first - p2.first);
+        Collections.sort(coords, (p1, p2) -> p1.first - p2.first);
         int medianRadius = coords.get(coords.size()/3).first;
-        coords.removeIf(pt -> pt.first/(double)medianRadius < 0.85 || pt.first/(double)medianRadius > 1.15);
-        coords.sort((p1, p2) -> (int) (p1.second.x - p2.second.x));
+        ArrayList<Pair<Integer, Point>> filteredCoords = new ArrayList<>();
+        for(Pair<Integer, Point> pt: coords) {
+            if(pt.first/(double)medianRadius >= 0.85 && pt.first/(double)medianRadius <= 1.15) {
+                filteredCoords.add(pt);
+            }
+        }
+        coords = filteredCoords;
+        Collections.sort(coords, (p1, p2) -> (int) (p1.second.x - p2.second.x));
         double medianX = coords.get(coords.size()/2).second.x;
-        coords.sort((p1, p2) -> (int) (p1.second.y - p2.second.y));
+        Collections.sort(coords, (p1, p2) -> (int) (p1.second.y - p2.second.y));
         double medianY = coords.get(coords.size()/2).second.y;
-        coords.sort((p1, p2) -> (int) (distance(p1.second, medianX, medianY) - distance(p2.second, medianX, medianY)));
+        Collections.sort(coords, (p1, p2) -> (int) (distance(p1.second, medianX, medianY) - distance(p2.second, medianX, medianY)));
         boolean[] visited = new boolean[coords.size()];
         Map<Integer, Pair<Integer,Integer>> pos = new HashMap<>();
         pos.put(0, Pair.create(0, 0));
