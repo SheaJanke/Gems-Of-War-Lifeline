@@ -9,6 +9,8 @@ import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Light_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Normal.Water_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Block_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Burning_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Curse_Gem;
+import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Freeze_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Lycanthropy_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Nexus_Star_Gem;
 import com.cowbraingames.optimalmatcher_gemsofwar.Gems.Other.Umbral_Star_Gem;
@@ -340,6 +342,10 @@ public class BoardUtils {
                 return new Nexus_Star_Gem();
             case UMBRAL_STAR:
                 return new Umbral_Star_Gem();
+            case FREEZE:
+                return new Freeze_Gem();
+            case CURSE:
+                return new Curse_Gem();
             case BLOCK:
                 return new Block_Gem();
             case UNKNOWN:

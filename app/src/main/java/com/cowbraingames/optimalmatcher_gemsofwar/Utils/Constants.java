@@ -22,6 +22,7 @@ public class Constants {
        put(GemType.DARK_POTION, R.drawable.dark_potion);
        put(GemType.LYCANTHROPY, R.drawable.lycanthropy);
        put(GemType.GROUND, R.drawable.ground);
+       put(GemType.GROUND_POTION, R.drawable.ground_potion);
        put(GemType.SKULL, R.drawable.skull);
        put(GemType.SUPER_SKULL, R.drawable.super_skull);
        put(GemType.UBER_DOOM_SKULL, R.drawable.uber_doom_skull);
@@ -32,6 +33,8 @@ public class Constants {
        put(GemType.WILD_X4, R.drawable.wild_4);
        put(GemType.NEXUS_STAR, R.drawable.nexus_star);
        put(GemType.UMBRAL_STAR, R.drawable.umbral_star);
+       put(GemType.FREEZE, R.drawable.freeze_gem);
+       put(GemType.CURSE, R.drawable.cursed_gem);
     }};
 
     public static final GemType[] boardDetectionLabels = {
@@ -57,11 +60,17 @@ public class Constants {
             GemType.WILD_X4,
             GemType.BURNING,
             GemType.NEXUS_STAR,
-            GemType.UMBRAL_STAR
+            GemType.UMBRAL_STAR,
+            GemType.FREEZE,
+            GemType.CURSE
     };
 
 
     public static int getResource(GemType gemType) {
-        return gemResource.get(gemType);
+        Integer resource = gemResource.get(gemType);
+        if(resource != null) {
+            return resource;
+        }
+        return R.drawable.unknown;
     }
 }
