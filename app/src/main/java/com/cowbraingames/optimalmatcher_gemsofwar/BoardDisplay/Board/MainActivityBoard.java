@@ -7,9 +7,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.cowbraingames.optimalmatcher_gemsofwar.BoardDisplay.BoardGridAdapter;
-import com.cowbraingames.optimalmatcher_gemsofwar.Storage.CloudStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.R;
+import com.cowbraingames.optimalmatcher_gemsofwar.Storage.CloudStorageManager;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.Constants;
 import com.cowbraingames.optimalmatcher_gemsofwar.Utils.GemType;
 import com.cowbraingames.optimalmatcher_gemsofwar.ml.ModelUnquant;
@@ -26,19 +25,17 @@ import java.io.IOException;
 
 public class MainActivityBoard extends Board{
     private final Context context;
-    private final Bitmap[][] unprocessedImages;
     private final Bitmap[][] processedImages;
     private final GemType[][] gemTypes;
 
     public MainActivityBoard(Context context, Bitmap[][] unprocessedImages) {
         this.context = context;
-        this.unprocessedImages = unprocessedImages;
         processedImages = new Bitmap[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
         gemTypes = new GemType[Constants.BOARD_SIZE][Constants.BOARD_SIZE];
-        predictEachSquare();
+        predictEachSquare(unprocessedImages);
     }
 
-    private void predictEachSquare(){
+    private void predictEachSquare(Bitmap[][] unprocessedImages){
         try {
             ModelUnquant model = ModelUnquant.newInstance(context);
             ImageProcessor imageResizer = new ImageProcessor.Builder()

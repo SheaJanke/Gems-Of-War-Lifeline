@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         description.setVisibility(View.INVISIBLE);
         gridView.setVisibility(View.VISIBLE);
         spinner.setVisibility(View.VISIBLE);
+        boardGrid.setBoard(null);
         new Thread(() -> {
             try{
                 BoardDetection boardDetection = new BoardDetection(boardBitmap);

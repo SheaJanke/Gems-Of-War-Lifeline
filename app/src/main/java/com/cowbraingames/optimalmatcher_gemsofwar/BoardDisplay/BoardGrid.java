@@ -21,7 +21,9 @@ public class BoardGrid {
 
     public void setBoard(Board board) {
         this.board = board;
-        setNoResultSelected();
+        if(board != null){
+            setNoResultSelected();
+        }
     }
 
     private void setNoResultSelected() {
@@ -44,7 +46,9 @@ public class BoardGrid {
         grid.setOnItemLongClickListener((adapterView, view, position, l) -> {
             int row = position / Constants.BOARD_SIZE;
             int col = position % Constants.BOARD_SIZE;
-            board.reportOrb(row, col);
+            if(board != null) {
+                board.reportOrb(row, col);
+            }
             return false;
         });
     }
