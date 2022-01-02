@@ -60,8 +60,8 @@ public class BoardDetection {
     private void detectCircles() throws BoardNotFoundException{
         final int MIN_THRESHOLD = 12;
         int minDimension = Math.min(edges.rows(), edges.cols());
-        int maxRadius = minDimension/16;
-        int minRadius = (int)(maxRadius/1.25);
+        int maxRadius = minDimension/14;
+        int minRadius = (int)(maxRadius/1.5);
         int curThreshold = 200;
         boolean foundBoard = false;
         while(!foundBoard){

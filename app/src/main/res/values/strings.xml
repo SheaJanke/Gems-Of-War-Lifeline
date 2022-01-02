@@ -18,14 +18,16 @@
     <string name="settings_autocrop">Auto-crop images</string>
     <string name="menu_tutorial">Tutorial</string>
     <string name="tutorial_1_title">Step 1: Take Picture</string>
-    <string name="tutorial_1_text">To get started, take a picture of the board using the in-app camera. To get the most reliable results, zoom into the board and don\'t include the characters in the picture.</string>
+    <string name="tutorial_1_text">To get started, take a picture of the board using the in-app camera. To get the most reliable results, zoom into the board and don\'t include the troops in the picture.</string>
     <string name="tutorial_2_title">Step 2: View Possible Moves</string>
     <string name="tutorial_2_text">A list of all the possible moves will be displayed. If you click one of the possible moves, the swapped gems will be highlighted in pink.</string>
     <string name="tutorial_3_title">Step 3: View Next Board</string>
     <string name="tutorial_3_text">If you hold down one of the possible moves, the next board and possible moves will be shown. The gems from skyfall are unknown and will be displayed with a question mark.</string>
     <string name="tutorial_4_title">Tip 1: Turn Off Auto-Crop</string>
-    <string name="tutorial_4_text">If you are having trouble getting the app to recognize the board, try turning off auto-crop in the settings. Crop the image close around the board (excluding the characters) for the most reliable results.</string>
+    <string name="tutorial_4_text">If you are having trouble getting the app to recognize the board, try turning off auto-crop in the app settings. Crop the image close around the board (excluding the troops) for the most reliable results.</string>
     <string name="tutorial_5_title">Tip 2: Report Incorrect Gems</string>
     <string name="tutorial_5_text">If the app incorrectly identifies one or more gems, you can report the mistake by pressing and holding the incorrect gem. This will help improve the gem classification in future updates and is greatly appreciated.</string>
+    <string name="tutorial_6_title">Tip 3: Turn Off Festive Themes</string>
+    <string name="tutorial_6_text">Turn off festive themes in the Gems of War settings to improve the chance that the gems are correctly identified from the picture.</string>
     <string name="tutorial_finish">Finish</string>
 </resources>

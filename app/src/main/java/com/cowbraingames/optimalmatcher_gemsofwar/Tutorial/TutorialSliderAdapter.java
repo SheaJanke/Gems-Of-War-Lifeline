@@ -13,10 +13,10 @@ import com.cowbraingames.optimalmatcher_gemsofwar.R;
 
 public class TutorialSliderAdapter extends RecyclerView.Adapter<TutorialSliderAdapter.TutorialViewHolder> {
 
-    public static final int NUM_TUTORIAL_SCREENS = 5;
-    private final int[] headers = {R.string.tutorial_1_title, R.string.tutorial_2_title, R.string.tutorial_3_title, R.string.tutorial_4_title, R.string.tutorial_5_title};
-    private final int[] descriptions = {R.string.tutorial_1_text, R.string.tutorial_2_text, R.string.tutorial_3_text, R.string.tutorial_4_text, R.string.tutorial_5_text };
-    private final int[] images = {R.drawable.tutorial_image_1, R.drawable.tutorial_image_2, R.drawable.tutorial_image_3, R.drawable.tutorial_image_4, R.drawable.tutorial_image_5};
+    public static final int NUM_TUTORIAL_SCREENS = 6;
+    private final int[] headers = {R.string.tutorial_1_title, R.string.tutorial_2_title, R.string.tutorial_3_title, R.string.tutorial_4_title, R.string.tutorial_5_title, R.string.tutorial_6_title};
+    private final int[] descriptions = {R.string.tutorial_1_text, R.string.tutorial_2_text, R.string.tutorial_3_text, R.string.tutorial_4_text, R.string.tutorial_5_text, R.string.tutorial_6_text };
+    private final int[] images = {R.drawable.tutorial_image_1, R.drawable.tutorial_image_2, R.drawable.tutorial_image_3, R.drawable.tutorial_image_4, R.drawable.tutorial_image_5, R.drawable.tutorial_image_6};
 
     public TutorialSliderAdapter() {
 
