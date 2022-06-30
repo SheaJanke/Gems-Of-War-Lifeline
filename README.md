@@ -37,12 +37,23 @@ The first approach I used to solve this problem was to force the user to crop th
 While this is a good first solution, it still has some problems. First of all, the user must crop the image very accurately or else some gems will be cut off when dividing the board into an 8x8 grid. Secondly, gem board must be perfectly alligned in the image or else the shape of the gem board will not be a square and it will be impossible to crop accurately. Overall, I found that manual crop is not a user-friendly solution because it takes too much time and effort to work properly.
 
 ### *Solution 1-2: Use image recognition algorithms*
-A more user-friendly (and challenging to implement) solution would be to automatically detect the position of the gems in the image. The algorithm I came up with uses the following three steps:
+A more user-friendly solution would be to automatically detect the position of the gems in the image. The algorithm I came up with uses the following three steps:
 
 1. Use the OpenCV Canny Edge Detection algorithm to detect the edges of the image.
+
 2. Use the OpenCV Hough Circle Transform algorithm to detect the circles (which correspond to the gems) in the image.
+
 3. Interpolate the position of the 8x8 grid of gems from the circles found in the previous step.
 
+This solution was challenging to implement and came with its own set of problems. First of all, I needed a way to tune the threshold hyperparameters for the Canny Edge Detection and Hough Circle algorithms. While a set of hyperparameters might work well on an one image, it would not work on images with different angles and lighting. To resolve this issue, for every image that the user takes the app tries multiple iterations of the Canny Edge Detation and Hough Circle algorithms with varying hyperparameters until it is able to interpolate the position of the 8x8 grid of gems with a high probablity. Despite running each algorithm multiple times, the entire process can be completed in around a second.
+
+The second issue that I had to address was how to interpolate the position of the 8x8 grid of gems given the location of the circles in the image. In practice, even with optimal hyperparameter choice for the Canny Edge Detection and Hough Circle algorithms only 75% of the gems would correctly correspond to a circle, and there would be a few outlier circles that don't correspond to a gem at all. I solved this by using a Depth First Search algorithm where for each circle, it searches for a neighbour circle in the four directions and keeping track of the relative locations in a grid-like structure. The DFS algorithm starts from the centermost circle and uses the median circle diameter to estimate how far away it should be looking for neighbouring circles. From the resulting grid-like structure of circles it finds the 8x8 grid with the most circles, discards the outliers circles and interpolates the missing circle locations using best-fit-lines. From my testing, this 8x8 grid of circles correctly corresponds to the 8x8 grid of gems with ~95% accuracy.
+
+<br />
+
+### **Challenge 2: How do you determine the the type of gem from the image?**
+### *Solution 2-1: Choose the gem with the closest color*
+Since each of the gems has a distinct color, the first solution I tried was matching the image to the gem with the closest average color.   
 
 
 
