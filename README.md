@@ -29,6 +29,7 @@ If you hold down one of the possible moves, the next board and possible moves wi
 ## **Challenges And Solutions:**
 
 ### **Challenge 1: How do you find the position of the gems in the picture?**
+
 ### *Solution 1-1: Make the user crop the photo*
 The first approach I used to solve this problem was to force the user to crop the image to just the gem board. Next, I would divide the cropped image into an 8x8 grid to get the position of the gems (each gem will be processed individually in a later stage). For the implementation, I used the [CanHub Android Image Cropper](https://github.com/CanHub/Android-Image-Cropper).
 
@@ -51,9 +52,30 @@ The second issue that I had to address was how to interpolate the position of th
 
 <br />
 
+<table>
+  <tr>
+    <td> <img src="Readme_Images/Original.png" width="200" height="250"></td>
+    <td><img src="Readme_Images/Edges.png" width="200" height="250"></td>
+    <td><img src="Readme_Images/Circles_Without_Interpolation.png" width="200" height="250"></td>
+    <td><img src="Readme_Images/Circles_With_Interpolation.png" width="200" height="250"></td>
+   </tr> 
+   <tr>
+    <td align="center">Original Image</td>
+    <td align="center">Canny Edge Detection</td>
+    <td align="center">Hough Circles</td>
+    <td align="center">Interpolated Result</td>
+   </tr> 
+</table>
+
+<br />
+
 ### **Challenge 2: How do you determine the the type of gem from the image?**
+
 ### *Solution 2-1: Choose the gem with the closest color*
-Since each of the gems has a distinct color, the first solution I tried was matching the image to the gem with the closest average color.   
+Since each of the gems has a distinct color, the first solution I tried was matching the image to the gem with the closest average color. This worked for ~90% of the gems in a given picture, but since there are 64 gems per game board, this resulted in too many incorrect classifications. Even if a single gem does not match the picture, then the calculated best moves will be not be valid. Furthermore, once I started this project *Gems of War* decided to add more gem types to the game. In the beginning there were only 8 gems with distinct colors, but now there are 20+ gems; many of which have similar color schemes. With this in mind, I had to take a different approach to solve this problem.  
+
+### *Solution 2-2: Use machine learning image classifcation*
+The second approach I tried was using machine learning image classification. 
 
 
 
