@@ -72,10 +72,16 @@ The second issue that I had to address was how to interpolate the position of th
 ### **Challenge 2: How do you determine the the type of gem from the image?**
 
 ### *Solution 2-1: Choose the gem with the closest color*
-Since each of the gems has a distinct color, the first solution I tried was matching the image to the gem with the closest average color. This worked for ~90% of the gems in a given picture, but since there are 64 gems per game board, this resulted in too many incorrect classifications. Even if a single gem does not match the picture, then the calculated best moves will be not be valid. Furthermore, once I started this project *Gems of War* decided to add more gem types to the game. In the beginning there were only 8 gems with distinct colors, but now there are 20+ gems; many of which have similar color schemes. With this in mind, I had to take a different approach to solve this problem.  
+Since each of the gems has a distinct color, the first solution I tried was matching the image to the gem with the closest average color. This worked for ~90% of the gems in a given picture, but since there are 64 gems per game board, this resulted in too many incorrect classifications. Even if a single gem does not match the picture, then the calculated best moves will be not be valid. Furthermore, once I started this project *Gems of War* decided to add more gem types to the game. In the beginning there were only 8 gems with distinct colors, but now there are 25+ gems; many of which have similar color schemes. With this in mind, I had to take a different approach to solve this problem.  
 
 ### *Solution 2-2: Use machine learning image classifcation*
-The second approach I tried was using machine learning image classification. 
+The second approach I tried was using machine learning image classification. I collected 100+ sample images for each of the gem types with various lighting conditions and camera angles to use as training data. With this approach, all the 64 gems in the picture would get classified correctly ~80% of the time. While this was a large improvement from the previous classification method, when I tried the app with different devices the classification accuracy dropped significantly. 
 
+<br />
 
+### **Challenge 3: How do you ensure the gem classification works well on images from different devices?**
 
+### *Solution 3: Add a feature to report incorrect classifications*
+Different devices produce slightly different picture styles, so I needed to find a way to make the gem classification more robust. Getting training data from different devices would solve this issue, but it would be infeasible to me to collect all this data myself. The solution I came up with is adding a feature that allows users to easily report incorrect classifications. When a user reports a misclassification, the app sends the image of the incorrectly classified gem to a Firebase cloud storage container. I use these images as training data to improve the machine learning model. 
+
+<img src="app/src/main/res/drawable-v24/tutorial_image_5.png" alt="Step 4 Image" width="250"/>
